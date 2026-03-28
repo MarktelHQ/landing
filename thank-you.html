@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're in — Marktel</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #0D0D1A; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; }
+
+  .wrap { max-width: 580px; width: 100%; text-align: center; }
+
+  /* Logo */
+  .logo { margin-bottom: 48px; display: flex; align-items: center; justify-content: center; }
+
+  /* Check animation */
+  .check-wrap { width: 88px; height: 88px; border-radius: 50%; background: rgba(0,229,200,0.1); border: 2px solid rgba(0,229,200,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; animation: pop 0.5s ease forwards; }
+  @keyframes pop { 0%{transform:scale(0); opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1); opacity:1} }
+  .check-wrap svg { animation: fadein 0.4s ease 0.3s both; }
+  @keyframes fadein { from{opacity:0; transform:scale(0.5)} to{opacity:1; transform:scale(1)} }
+
+  /* Headline */
+  .eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #00E5C8; margin-bottom: 16px; }
+  h1 { font-size: 42px; font-weight: 800; color: #fff; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px; }
+  h1 em { font-style: normal; color: #00E5C8; }
+  .sub { font-size: 17px; color: #8888AA; line-height: 1.6; max-width: 460px; margin: 0 auto 48px; }
+
+  /* What happens next */
+  .next-card { background: #111827; border: 1px solid #1E2D40; border-radius: 20px; padding: 32px; margin-bottom: 32px; text-align: left; }
+  .next-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #556688; margin-bottom: 20px; }
+  .next-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+  .next-item:last-child { margin-bottom: 0; }
+  .next-num { width: 28px; height: 28px; border-radius: 8px; background: #0D0D1A; border: 1px solid #1E2D40; color: #00E5C8; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .next-text strong { display: block; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .next-text span { font-size: 13px; color: #8888AA; line-height: 1.5; }
+
+  /* Share section */
+  .share-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #556688; margin-bottom: 16px; }
+  .share-box { background: #111827; border: 1px solid #1E2D40; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; }
+  .share-quote { font-size: 14px; color: #AABBCC; line-height: 1.6; font-style: italic; margin-bottom: 16px; }
+  .share-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-linkedin { background: #0A66C2; color: #fff; font-size: 13px; font-weight: 700; padding: 11px 20px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; border: none; cursor: pointer; }
+  .btn-linkedin:hover { background: #0855A5; }
+  .btn-copy { background: #1A2A3A; color: #fff; font-size: 13px; font-weight: 700; padding: 11px 20px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; border: 1px solid #2A3A4A; cursor: pointer; }
+  .btn-copy:hover { background: #243444; }
+  .btn-copy.copied { background: rgba(0,229,200,0.1); border-color: #00E5C8; color: #00E5C8; }
+
+  /* Back to site */
+  .back-link { font-size: 13px; color: #556688; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; transition: color 0.2s; }
+  .back-link:hover { color: #00E5C8; }
+
+  /* Live dot */
+  .live-dot { width: 7px; height: 7px; background: #00E5C8; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Logo -->
+  <div class="logo">
+    <svg width="180" height="38" viewBox="0 0 180 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="36" height="36" rx="9" fill="#1A2A3A"/>
+      <polyline points="4,18 10,18 13,9 16,27 19,13 22,22 25,18 32,18" stroke="#00E5C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="32" cy="18" r="2.8" fill="#00E5C8"/>
+      <text x="44" y="27" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800" font-size="22" letter-spacing="-0.8">
+        <tspan fill="#ffffff">mark</tspan><tspan fill="#00E5C8">tel</tspan>
+      </text>
+    </svg>
+  </div>
+
+  <!-- Check -->
+  <div class="check-wrap">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+      <path d="M8 18 L15 25 L28 11" stroke="#00E5C8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- Headline -->
+  <div class="eyebrow"><span class="live-dot"></span> &nbsp;Early access confirmed</div>
+  <h1>You're in.<br><em>We'll take it from here.</em></h1>
+  <p class="sub">Check your inbox — a confirmation email is on its way. Your first briefing will be ready within 48 hours of activation.</p>
+
+  <!-- What happens next -->
+  <div class="next-card">
+    <div class="next-title">What happens next</div>
+    <div class="next-item">
+      <div class="next-num">1</div>
+      <div class="next-text">
+        <strong>Check your email</strong>
+        <span>We've sent a confirmation with your details and next steps.</span>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">2</div>
+      <div class="next-text">
+        <strong>We review your competitors</strong>
+        <span>Our team confirms we can track them fully — we'll let you know within 48 hours.</span>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">3</div>
+      <div class="next-text">
+        <strong>Your first briefing lands</strong>
+        <span>A weekly competitive intelligence report, analyst-reviewed, ready to share with your team.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share -->
+  <div class="share-label">Know someone who'd find this useful?</div>
+  <div class="share-box">
+    <div class="share-quote">"Just signed up for Marktel — weekly competitive intelligence briefings, AI-powered and analyst-reviewed. Looks like exactly what marketing teams need. marktel.io"</div>
+    <div class="share-actions">
+      <a class="btn-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.marktel.io" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="transparent"/><rect x="7" y="11" width="3" height="10" fill="#fff"/><circle cx="8.5" cy="8.5" r="1.8" fill="#fff"/><path d="M13 11h3v1.4c.5-.9 1.6-1.6 3-1.6 2.5 0 3.5 1.7 3.5 4V21h-3v-5.5c0-1.2-.4-2-1.5-2s-2 .9-2 2.2V21h-3V11z" fill="#fff"/></svg>
+        Share on LinkedIn
+      </a>
+      <button class="btn-copy" onclick="copyLink(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy link
+      </button>
+    </div>
+  </div>
+
+  <a href="https://www.marktel.io" class="back-link">← Back to marktel.io</a>
+
+</div>
+
+<script>
+function copyLink(btn) {
+  navigator.clipboard.writeText('https://www.marktel.io').then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy link';
+    }, 2500);
+  });
+}
+</script>
+
+</body>
+</html>
