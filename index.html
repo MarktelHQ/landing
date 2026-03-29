@@ -153,10 +153,7 @@
   .price-card.featured .plan-feature::before { color: #00E5C8; }
   .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #00E5C8; color: #0D0D1A; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 10px; white-space: nowrap; }
   .plan-name { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #0D0D1A; margin-bottom: 4px; }
-  .plan-price { font-size: 40px; font-weight: 800; color: #0D0D1A; letter-spacing: -2px; margin: 16px 0 4px; line-height: 1; }
-  .price-card.featured .plan-price { color: #fff; }
-  .plan-price sup { font-size: 18px; font-weight: 700; letter-spacing: 0; vertical-align: super; }
-  .plan-price sub { font-size: 14px; font-weight: 500; letter-spacing: 0; color: #8888AA; }
+
   .plan-desc { font-size: 12px; color: #8888AA; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #F0F1F5; line-height: 1.5; }
   .price-card.featured .plan-desc { border-color: #1A2A3A; }
   .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
@@ -226,7 +223,7 @@
   @media(max-width:900px) {
     .hero h1 { font-size: 38px; }
     .steps { grid-template-columns: 1fr 1fr; }
-    .pricing-grid { grid-template-columns: 1fr 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
     .features-grid { grid-template-columns: 1fr 1fr; }
     .testi-grid { grid-template-columns: 1fr; }
     .human-inner { grid-template-columns: 1fr; }
@@ -258,7 +255,7 @@
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
+      <a href="#plans">Plans</a>
       <a href="#sources">Data sources</a>
     </div>
     <a href="https://tally.so/r/J9Lr8J" target="_blank" class="nav-cta">Get early access →</a>
@@ -306,7 +303,7 @@
             <div class="mockup-name">AXA Insurance — Week 13, 2026</div>
             <div class="mockup-date">Delivered Sat 28 Mar 2026 · 5 signals detected</div>
           </div>
-          <div class="mockup-badge"><div class="verified-dot"></div> Analyst Verified</div>
+          
         </div>
         <div class="mockup-signals">
           <div class="signal-box">
@@ -556,56 +553,37 @@
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="section section-light" id="pricing">
+<!-- PLANS -->
+<section class="section section-light" id="plans">
   <div class="wrap">
-    <div class="section-eyebrow">Simple Pricing</div>
-    <h2 class="section-title">Start free. Scale when it's working.</h2>
-    <p class="section-sub">No payment required during early access. Reserve your plan now — pricing locks in at launch. Every plan includes human analyst review on every report.</p>
-    <div class="pricing-grid">
+    <div class="section-eyebrow">Choose Your Plan</div>
+    <h2 class="section-title">Two plans. No noise.</h2>
+    <p class="section-sub">Both plans include human analyst review on every report. Pricing will be confirmed at launch.</p>
+    <div class="pricing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:720px;margin:0 auto;">
 
-      <!-- FREE -->
+      <!-- STARTER -->
       <div class="price-card">
-        <div class="plan-name">Free</div>
-        <div class="plan-price"><sup>$</sup>0<sub>/mo</sub></div>
-        <div class="plan-desc">Get a feel for what Marktel delivers. One competitor, one report per week.</div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Perfect for marketing and business leaders looking to try out our platform.</div>
         <ul class="plan-features">
           <li class="plan-feature">1 competitor tracked</li>
           <li class="plan-feature">Weekly email briefing</li>
           <li class="plan-feature">Ad + website monitoring</li>
           <li class="plan-feature">News &amp; PR mentions</li>
+          <li class="plan-feature">Human analyst review</li>
           <li class="plan-feature cross">PDF &amp; PPTX export</li>
           <li class="plan-feature cross">SEO &amp; content tracking</li>
-          <li class="plan-feature cross">Analyst priority review</li>
         </ul>
-        <a href="https://tally.so/r/J9Lr8J" target="_blank" class="plan-btn plan-btn-outline">Join waitlist →</a>
-      </div>
-
-      <!-- STARTER -->
-      <div class="price-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price"><sup>$</sup>49<sub>/mo</sub></div>
-        <div class="plan-desc">For founders and solo marketers keeping a close eye on the competition.</div>
-        <ul class="plan-features">
-          <li class="plan-feature">3 competitors tracked</li>
-          <li class="plan-feature">Weekly email briefing</li>
-          <li class="plan-feature">Ad + website monitoring</li>
-          <li class="plan-feature">News &amp; PR mentions</li>
-          <li class="plan-feature">PDF export included</li>
-          <li class="plan-feature cross">PPTX deck export</li>
-          <li class="plan-feature cross">SEO &amp; content tracking</li>
-        </ul>
-        <a href="https://tally.so/r/J9Lr8J" target="_blank" class="plan-btn plan-btn-primary">Join waitlist →</a>
+        <a href="https://tally.so/r/J9Lr8J" target="_blank" class="plan-btn plan-btn-primary">Get early access →</a>
       </div>
 
       <!-- PRO -->
       <div class="price-card featured">
         <div class="popular-badge">Most popular</div>
         <div class="plan-name">Pro</div>
-        <div class="plan-price"><sup>$</sup>99<sub>/mo</sub></div>
-        <div class="plan-desc">For marketing teams that want the full picture and boardroom-ready output.</div>
+        <div class="plan-desc">For marketing and business leaders that want the full picture and meeting-ready output.</div>
         <ul class="plan-features">
-          <li class="plan-feature">10 competitors tracked</li>
+          <li class="plan-feature">3 competitors tracked</li>
           <li class="plan-feature">Weekly email briefing</li>
           <li class="plan-feature">Full ad intelligence</li>
           <li class="plan-feature">Website diff detection</li>
@@ -613,12 +591,11 @@
           <li class="plan-feature">SEO &amp; content tracking</li>
           <li class="plan-feature">Priority analyst review</li>
         </ul>
-        <a href="https://tally.so/r/J9Lr8J" target="_blank" class="plan-btn plan-btn-dark">Join waitlist →</a>
+        <a href="https://tally.so/r/J9Lr8J" target="_blank" class="plan-btn plan-btn-dark">Get early access →</a>
       </div>
 
-      
     </div>
-    <div class="pricing-note">Pricing locks in at launch for early access members. Annual billing saves 20%. Questions? <a href="mailto:hello@marktel.io">Talk to a human →</a></div>
+    <div class="pricing-note" style="margin-top:32px;">We’re finalising pricing before launch.</div>
   </div>
 </section>
 
