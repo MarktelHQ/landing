@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +21,30 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+
+  /* SOCIAL PROOF BAR */
+  .proof-bar { background: #0D0D1A; padding: 0 24px 64px; }
+  .proof-bar-inner { max-width: 860px; margin: 0 auto; display: flex; border: 1px solid #1E2D40; border-radius: 16px; overflow: hidden; }
+  .proof-stat { flex: 1; padding: 24px 20px; text-align: center; border-right: 1px solid #1E2D40; }
+  .proof-stat:last-child { border-right: none; }
+  .proof-num { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1; }
+  .proof-num em { color: #00E5C8; font-style: normal; }
+  .proof-label { font-size: 11px; color: #556688; font-weight: 600; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* FAQ */
+  .faq-list { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: #fff; border-radius: 14px; border: 1px solid #E8E9F0; overflow: hidden; }
+  .faq-q { width: 100%; background: none; border: none; padding: 20px 24px; font-size: 14px; font-weight: 700; color: #0D0D1A; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit; }
+  .faq-q:hover { color: #00A896; }
+  .faq-chevron { font-size: 16px; color: #8888AA; transition: transform 0.25s; flex-shrink: 0; display: inline-block; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { font-size: 13px; color: #666688; line-height: 1.7; padding: 0 24px 20px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  /* STICKY MOBILE CTA */
+  .sticky-mobile-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: #0D0D1A; border-top: 1px solid #1A2A3A; padding: 12px 20px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .sticky-mobile-cta a { display: block; text-align: center; background: #00A896; color: #fff; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 12px; text-decoration: none; }
+  @media(max-width:700px){ .sticky-mobile-cta { display: block; } body { padding-bottom: 80px; } }
   body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F0F1F5; color: #0D0D1A; }
 
   /* NAV */
@@ -57,6 +80,51 @@
   .trust-dot { color: #2A3A4A; }
 
   /* SAMPLE REPORT PREVIEW */
+  /* INBOX PREVIEW */
+  .inbox-shell { background: #1C1C1E; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 1px solid #2A2A2A; }
+  .inbox-chrome { background: #2A2A2A; padding: 12px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #333; }
+  .inbox-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .inbox-dot.r{background:#FF5F57;} .inbox-dot.y{background:#FFBD2E;} .inbox-dot.g{background:#28C840;}
+  .inbox-chrome-label { margin-left: 12px; font-size: 12px; color: #888; font-family: -apple-system,sans-serif; }
+  .inbox-layout { display: flex; height: 480px; }
+  .inbox-sidebar { width: 220px; background: #1C1C1E; border-right: 1px solid #2A2A2A; flex-shrink: 0; padding: 16px 0; }
+  .inbox-sidebar-item { padding: 8px 20px; font-size: 12px; color: #888; font-family: -apple-system,sans-serif; display: flex; align-items: center; gap: 10px; }
+  .inbox-sidebar-item.active { background: #3A3A3C; color: #fff; font-weight: 600; border-radius: 8px; margin: 0 8px; padding: 8px 12px; }
+  .inbox-sidebar-item .si-count { margin-left: auto; background: #00A896; color: #fff; font-size: 10px; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+  .inbox-list { width: 240px; background: #242424; border-right: 1px solid #2A2A2A; flex-shrink: 0; }
+  .inbox-list-header { padding: 14px 16px; font-size: 13px; font-weight: 700; color: #fff; border-bottom: 1px solid #333; font-family: -apple-system,sans-serif; }
+  .inbox-row { padding: 12px 16px; border-bottom: 1px solid #2A2A2A; cursor: default; }
+  .inbox-row.selected { background: #1E3040; border-left: 3px solid #00A896; padding-left: 13px; }
+  .inbox-row-sender { font-size: 12px; font-weight: 700; color: #fff; font-family: -apple-system,sans-serif; margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .inbox-row-sender .ir-time { font-size: 11px; color: #666; font-weight: 400; }
+  .inbox-row-subject { font-size: 11px; color: #ccc; font-family: -apple-system,sans-serif; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inbox-row-preview { font-size: 11px; color: #666; font-family: -apple-system,sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inbox-email { flex: 1; background: #1C1C1E; overflow-y: auto; }
+  .email-header-bar { padding: 20px 24px 16px; border-bottom: 1px solid #2A2A2A; }
+  .email-subject-line { font-size: 15px; font-weight: 800; color: #fff; font-family: -apple-system,sans-serif; margin-bottom: 10px; }
+  .email-meta { display: flex; align-items: center; gap: 10px; }
+  .email-av { width: 32px; height: 32px; background: linear-gradient(135deg,#00A896,#00E5C8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #0D0D1A; flex-shrink: 0; }
+  .email-from { font-size: 12px; color: #aaa; font-family: -apple-system,sans-serif; }
+  .email-from strong { color: #fff; display: block; }
+  .email-time { margin-left: auto; font-size: 11px; color: #555; font-family: -apple-system,sans-serif; }
+  .email-body { padding: 20px 24px; }
+  .eb-greeting { font-size: 13px; color: #aaa; font-family: -apple-system,sans-serif; margin-bottom: 14px; }
+  .eb-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #00A896; margin-bottom: 6px; }
+  .eb-signals { display: flex; gap: 8px; margin-bottom: 14px; }
+  .eb-signal { background: #2A2A2A; border-radius: 10px; padding: 16px 12px; flex: 1; text-align: center; }
+  .eb-signal-label { font-size: 11px; color: #888; font-family: -apple-system,sans-serif; margin-bottom: 4px; }
+  .eb-signal-val { font-size: 28px; font-weight: 800; color: #fff; font-family: -apple-system,sans-serif; line-height: 1; }
+  .eb-signal-change { font-size: 11px; color: #00E5C8; font-family: -apple-system,sans-serif; margin-top: 4px; font-weight: 600; }
+  .eb-insight { background: #242424; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .eb-insight-tag { font-size: 13px; font-weight: 700; color: #fff; font-family: -apple-system,sans-serif; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .eb-insight-text { font-size: 12px; color: #888; line-height: 1.6; font-family: -apple-system,sans-serif; margin-top: 4px; }
+  .eb-analyst { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid #2A2A2A; margin-top: 8px; }
+  .eb-analyst-av { width: 24px; height: 24px; background: linear-gradient(135deg,#00A896,#00E5C8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #0D0D1A; flex-shrink: 0; }
+  .eb-analyst-text { font-size: 10px; color: #666; font-family: -apple-system,sans-serif; }
+  .eb-analyst-text strong { color: #aaa; }
+  @media(max-width:900px){ .inbox-sidebar { display: none; } .inbox-list { width: 200px; } }
+  @media(max-width:650px){ .inbox-list { display: none; } .inbox-layout { height: auto; } }
+
   .preview-section { background: #0D0D1A; padding: 0 24px 80px; }
   .preview-wrap { max-width: 860px; margin: 0 auto; }
   .preview-label { text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #556688; margin-bottom: 20px; }
@@ -287,12 +355,62 @@
   </div>
 </section>
 
-<!-- SAMPLE REPORT PREVIEW -->
+
+
+<!-- INBOX PREVIEW -->
 <section class="preview-section">
   <div class="preview-wrap">
-    <div class="preview-label">↓ Your weekly briefing looks like this</div>
-    <div class="report-mockup">
-      <div class="mockup-bar">
+    <div class="preview-label">↓ Here's an example of what you'll get in your inbox</div>
+    <div class="inbox-shell">
+      <!-- Gmail-style chrome -->
+      <div class="inbox-chrome">
+        <div class="inbox-dot r"></div><div class="inbox-dot y"></div><div class="inbox-dot g"></div>
+        <div class="inbox-chrome-label">Inbox — anna@company.com</div>
+      </div>
+      <div class="inbox-layout">
+        <div class="inbox-sidebar">
+          <div class="inbox-sidebar-item active"><span>📥</span> Inbox <span class="si-count">1</span></div>
+          <div class="inbox-sidebar-item"><span>★</span> Starred</div>
+          <div class="inbox-sidebar-item"><span>📤</span> Sent</div>
+          <div class="inbox-sidebar-item"><span>📁</span> Reports</div>
+        </div>
+
+        <div class="inbox-email">
+          <div class="email-header-bar">
+            <div class="email-subject-line">📊 AXA Insurance — Week 13 Competitor Brief</div>
+            <div class="email-meta">
+              <div class="email-av">M</div>
+              <div class="email-from"><strong>Marktel Intelligence</strong>hello@marktel.io</div>
+              <div class="email-time">Sat 28 Mar · 7:04 AM</div>
+            </div>
+          </div>
+          <div class="email-body">
+            <div class="eb-greeting">Good morning Anna — your W13 AXA brief is ready.</div>
+            <div style="display:none">Good morning Anna — here’s your weekly AXA Intelligence Brief for W13.</div>
+            <div class="eb-section-label">📊 This week’s signals</div>
+            <div class="eb-signals">
+              <div class="eb-signal"><div class="eb-signal-label">Active Ads</div><div class="eb-signal-val">31</div><div class="eb-signal-change">↑ Up 11</div></div>
+              <div class="eb-signal"><div class="eb-signal-label">Page Changes</div><div class="eb-signal-val">4</div><div class="eb-signal-change">Pricing revised</div></div>
+              <div class="eb-signal"><div class="eb-signal-label">LinkedIn Reach</div><div class="eb-signal-val">38k</div><div class="eb-signal-change">↑ +64%</div></div>
+            </div>
+            <div class="eb-section-label">🔑 Key signal this week</div>
+            <div class="eb-insight">
+              <div class="eb-insight-tag">&#128308;&nbsp; Campaign surge</div>
+              <div class="eb-insight-text">AXA ramped Meta ads to 31 creatives (up from 20), targeting SMEs. CTA is now “See your price” — Spring push underway. <!--  —  “protect what you’ve built” messaging. CTA shifted from “Get a quote” to “See your price.” </div>
+            </div>
+            <div class="eb-insight" style="border-left-color:#FF9800;">
+              <div class="eb-insight-tag">&#128993;&nbsp; Watch this</div>
+              <div class="eb-insight-text">Business insurance landing page updated — hero now reads “Cover that works as hard as you do.” Products rebundled under “AXA Business Essential.” Likely a pre-launch rebrand. Monitor closely.</div>
+            </div>
+            <div class="eb-analyst">
+              <div class="eb-analyst-av">BW</div>
+              <div class="eb-analyst-text"><strong>Reviewed by Ben W., Lead Analyst</strong> · Approved Sat 28 Mar · 31 ads assessed, 12 flagged</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end inbox -->
+      <div class="mockup-bar" style="display:none">
         <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
         <div class="mockup-url">app.marktel.io/reports/axa-insurance-w13-2026</div>
       </div>
@@ -324,7 +442,7 @@
         </div>
         <div class="mockup-insight">
           <div class="insight-tag">🔑 Key Signal</div>
-          <div class="insight-text">AXA Insurance has significantly increased Meta ad activity this week — 31 active creatives, up from 20 last week. The new ads are almost exclusively targeting SME business owners with messaging centred on "protect what you've built" and "business insurance sorted in minutes." This is a clear push into the fast-growth SME segment, likely timed to coincide with the new financial year. Their CTA has shifted from "Get a quote" to "See your price" — a lower-friction entry point.</div>
+          <div class="insight-text">AXA Insurance has significantly increased Meta ad activity this week — 31 active creatives, up from 20 last week. The new ads are almost exclusively targeting SME business owners with messaging centred on "" and "business insurance sorted in minutes." This is a clear push into the fast-growth SME segment, likely timed to coincide with the new financial year. Their CTA has shifted from "Get a quote" to "See your price" — a lower-friction entry point.</div>
         </div>
         <div class="mockup-insight" style="border-left-color: #FF9800;">
           <div class="insight-tag" style="color:#FF9800;">⚠️ Watch This</div>
@@ -653,6 +771,46 @@
   <div class="cta-small">No payment required in early access · Human-reviewed, every report · Cancel anytime</div>
 </section>
 
+<!-- FAQ -->
+<section class="section section-light" id="faq">
+  <div class="wrap">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-title">Questions, answered.</h2>
+    <p class="section-sub" style="margin-bottom:40px;">Everything you need to know before you sign up.</p>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <button class="faq-q">How quickly will I get my first briefing? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">Within 48 hours of completing your onboarding form. We'll confirm your competitors, set your delivery day, and have your first report in your inbox — no setup call needed.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What competitors can you track? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">Any company with a public web presence, active social media accounts, or ad activity. If they're out there marketing, we can monitor them. If you're unsure, just name them in the onboarding form and we'll confirm before your first report.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need to do anything after I sign up? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">Nothing. Once your onboarding form is submitted, we handle everything — data collection, analysis, formatting, and delivery. Your briefing lands in your inbox every week on your chosen day.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is this just AI, or do humans actually review it? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">Every report is reviewed by a human analyst before it reaches you. AI handles data collection and initial processing — humans filter out the noise, add strategic context, and verify accuracy. You only see what actually matters.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How is this different from tools like Semrush or Similarweb? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">Those are great data tools — but they require you to do the research yourself. Marktel does the research, interprets the signals, and delivers a ready-to-use briefing. No dashboards to check, no data to interpret — just the insight, waiting in your inbox.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What does the output actually look like? <span class="faq-chevron">▾</span></button>
+        <div class="faq-a">A clean email briefing with an executive summary, key signals, and recommended actions. Pro plan members also receive a downloadable PDF and a presentation-ready PPTX deck — ready to drop straight into a board pack or strategy review.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-mobile-cta">
+  <a href="https://tally.so/r/J9Lr8J" target="_blank">Get early access →</a>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -671,7 +829,21 @@
     </div>
   </div>
 </footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  </footer>
 
+<script>
+document.querySelectorAll('.faq-q').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    btn.closest('.faq-item').classList.toggle('open');
+  });
+});
+var sc = document.querySelector('.sticky-mobile-cta');
+if(sc){
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 400){ sc.style.opacity='1'; sc.style.pointerEvents='auto'; }
+    else{ sc.style.opacity='0'; sc.style.pointerEvents='none'; }
+  });
+}
+</script>
 </body>
 </html>
