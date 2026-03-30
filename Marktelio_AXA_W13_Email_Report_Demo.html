@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marktelio - AXA Insurance Week 13 Intelligence Brief</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #e8e9f0; font-family: 'Open Sans', sans-serif; color: #0d0d1a; -webkit-font-smoothing: antialiased; }
+    .email-wrap { max-width: 680px; margin: 32px auto; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 48px rgba(13,13,26,0.18); }
+    .header { background: #0d0d1a; padding: 28px 36px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2a3a; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-text { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #ffffff; }
+    .logo-text .accent { color: #00e5c8; }
+    .header-meta { text-align: right; }
+    .header-meta .week { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00e5c8; }
+    .header-meta .date { margin-top: 2px; font-size: 11px; color: #6f7d95; }
+    .hero { background: linear-gradient(135deg, #0d1825 0%, #0d0d1a 100%); padding: 32px 36px 28px; border-bottom: 1px solid #1a2a3a; }
+    .tracking-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: #1a2a3a; border: 1px solid #2a3a4a; margin-bottom: 18px; }
+    .tracking-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #00e5c8; }
+    .tracking-pill span { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #8a95a8; }
+    .tracking-pill strong { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; color: #00e5c8; }
+    .hero h1 { font-family: 'Montserrat', sans-serif; font-size: 22px; line-height: 1.3; font-weight: 800; color: #ffffff; margin-bottom: 10px; }
+    .hero h1 em { font-style: normal; color: #00e5c8; }
+    .hero p { font-size: 13px; line-height: 1.6; color: #aab4c3; }
+    .analyst-bar { margin-top: 18px; padding-top: 18px; border-top: 1px solid #1a2a3a; display: flex; align-items: center; gap: 10px; }
+    .analyst-av { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; color: #0d0d1a; background: linear-gradient(135deg, #00a896, #00e5c8); flex-shrink: 0; }
+    .analyst-text { font-size: 11px; line-height: 1.5; color: #6f7d95; }
+    .analyst-text strong { color: #dbe5f0; }
+    .signal-row { display: flex; border-bottom: 1px solid #f0f1f5; }
+    .signal-box { flex: 1; padding: 18px 10px; text-align: center; border-right: 1px solid #f0f1f5; }
+    .signal-box:last-child { border-right: none; }
+    .signal-label { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8a95a8; margin-bottom: 6px; }
+    .signal-val { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 900; color: #0d0d1a; line-height: 1; }
+    .signal-change { margin-top: 4px; font-size: 11px; font-weight: 600; color: #00a896; }
+    .section { padding: 28px 36px; border-bottom: 1px solid #f0f1f5; }
+    .section:last-of-type { border-bottom: none; }
+    .section-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00a896; }
+    .section-eyebrow::after { content: ''; flex: 1; height: 1px; background: #f0f1f5; }
+    .platform-icon { display: inline-flex; align-items: center; justify-content: center; }
+    .insight { background: #f8f9fc; border-left: 3px solid #00e5c8; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 12px; }
+    .insight:last-child { margin-bottom: 0; }
+    .insight.high { border-left-color: #c62828; }
+    .insight.medium { border-left-color: #e65100; }
+    .insight.watch { border-left-color: #2e7d32; }
+    .insight-tag { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #0d0d1a; }
+    .pill { display: inline-block; padding: 2px 7px; border-radius: 5px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; }
+    .pill.high { background: #fdecec; color: #c62828; }
+    .pill.medium { background: #fff4e5; color: #e65100; }
+    .pill.watch { background: #eaf7ea; color: #2e7d32; }
+    .insight p { font-size: 13px; line-height: 1.7; color: #444466; }
+    .insight p strong { color: #0d0d1a; }
+    .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { background: #f8f9fc; border: 1px solid #ebebf5; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; min-height: 100%; }
+    .thumb { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; background: #eef1f4; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #eef1f4; }
+    .card-platform { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8a95a8; }
+    .card-title { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; line-height: 1.4; color: #0d0d1a; margin-bottom: 5px; }
+    .card-body { font-size: 11px; line-height: 1.6; color: #666688; }
+    .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .meta-tag { padding: 2px 6px; border-radius: 4px; background: #ebebf5; color: #666688; font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+    .top-post-pill { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px; padding: 3px 8px; border-radius: 999px; background: #fff4e5; color: #e65100; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
+    .view-link { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 10px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: #00a896; text-decoration: none; }
+    .intel-box { margin-top: 14px; padding: 12px 14px; background: #f0f1f5; border-radius: 8px; }
+    .intel-box-label { margin-bottom: 4px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #0d0d1a; }
+    .intel-box p { font-size: 12px; line-height: 1.6; color: #444466; }
+    .post-card { background: #f8f9fc; border: 1px solid #ebebf5; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .post-card:last-child { margin-bottom: 0; }
+    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .post-av { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #003087, #0057b8); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; color: #ffffff; flex-shrink: 0; }
+    .post-meta strong { display: block; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #0d0d1a; }
+    .post-meta span { font-size: 11px; color: #8a95a8; }
+    .post-content { font-size: 12px; line-height: 1.7; color: #444466; margin-bottom: 10px; font-style: italic; }
+    .post-stats { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid #ebebf5; }
+    .post-stat { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #8a95a8; }
+    .post-stat strong { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #0d0d1a; }
+    .post-intel { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: #0d0d1a; }
+    .post-intel-label { margin-bottom: 4px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #00e5c8; }
+    .post-intel p { font-size: 11px; line-height: 1.6; color: #aabbcc; }
+    .post-intel p strong { color: #ffffff; }
+    .change-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #f0f1f5; }
+    .change-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .change-signal { width: 62px; flex-shrink: 0; }
+    .signal-pill { padding: 3px 7px; border-radius: 5px; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+    .signal-pill.high { background: #fdecec; color: #c62828; }
+    .signal-pill.medium { background: #fff4e5; color: #e65100; }
+    .signal-pill.watch { background: #eaf7ea; color: #2e7d32; }
+    .change-url { margin-bottom: 4px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; color: #00a896; }
+    .change-content strong { display: block; margin-bottom: 3px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #0d0d1a; }
+    .change-content p { font-size: 12px; line-height: 1.6; color: #666688; }
+    .action-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f0f1f5; }
+    .action-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .action-num { width: 28px; height: 28px; border-radius: 8px; background: #0d0d1a; color: #00e5c8; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+    .action-content strong { display: block; margin-bottom: 4px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #0d0d1a; }
+    .action-content p { font-size: 12px; line-height: 1.6; color: #666688; }
+    .action-tag { display: inline-block; margin-top: 6px; }
+    .footer { background: #0d0d1a; padding: 28px 36px; text-align: center; }
+    .footer-logo { margin-bottom: 8px; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #ffffff; }
+    .footer-logo .accent { color: #00e5c8; }
+    .footer-tagline { margin-bottom: 16px; font-size: 11px; color: #6f7d95; }
+    .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-links a { font-size: 11px; color: #8aa0b8; text-decoration: none; }
+    .footer-note { font-size: 11px; line-height: 1.8; color: #6f7d95; }
+    @media (max-width: 600px) {
+      .email-wrap { margin: 0; border-radius: 0; }
+      .header, .hero, .section, .footer { padding-left: 20px; padding-right: 20px; }
+      .signal-row { display: block; }
+      .signal-box { border-right: none; border-bottom: 1px solid #f0f1f5; }
+      .signal-box:last-child { border-bottom: none; }
+      .card-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 18px; }
+      .signal-val { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="header">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="68" height="68" rx="16" fill="#1A2A3A"/>
+          <polyline points="9,34 19,34 24,18 30,50 35,26 41,42 47,34 59,34" stroke="#00E5C8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="59" cy="34" r="4.5" fill="#00E5C8"/>
+        </svg>
+        <div class="logo-text">Marktel<span class="accent">io</span></div>
+      </div>
+      <div class="header-meta">
+        <div class="week">W13 · 2026</div>
+        <div class="date">Delivered Sat 29 Mar 2026</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="tracking-pill">
+        <div class="dot"></div>
+        <span>Tracking</span>
+        <strong>AXA INSURANCE</strong>
+      </div>
+      <h1>AXA Employer branding dominates.<br><em>Global Meta ads push UK expat market. SME ad push intensifies.</em></h1>
+      <p>AXA ramped Meta ad activity with 7 active creatives on the global page - 2 launched this week targeting UK expats. Their highest-performing LinkedIn post (302 reactions) was employer branding, not product. Homepage is leading with crisis response content.</p>
+      <div class="analyst-bar">
+        <div class="analyst-av">BW</div>
+        <div class="analyst-text"><strong>Reviewed by Ben W., Lead Analyst</strong> · 7 Meta ads assessed · 4 page changes detected · Approved Sat 29 Mar 2026</div>
+      </div>
+    </div>
+
+    <div class="signal-row">
+      <div class="signal-box">
+        <div class="signal-label">Active Ads</div>
+        <div class="signal-val">7</div>
+        <div class="signal-change">Global page</div>
+      </div>
+      <div class="signal-box">
+        <div class="signal-label">Page Changes</div>
+        <div class="signal-val">4</div>
+        <div class="signal-change">Biz + homepage</div>
+      </div>
+      <div class="signal-box">
+        <div class="signal-label">LinkedIn Reach</div>
+        <div class="signal-val">38k</div>
+        <div class="signal-change">Top post +64%</div>
+      </div>
+      <div class="signal-box">
+        <div class="signal-label">Peak Reactions</div>
+        <div class="signal-val">302</div>
+        <div class="signal-change">Employer brand</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-eyebrow">Executive Summary</div>
+
+      <div class="insight high">
+        <div class="insight-tag">Campaign Surge - SME Focus <span class="pill high">High</span></div>
+        <p>AXA increased local Meta ad activity to <strong>31 active creatives</strong> (up from 20), almost exclusively targeting SME business owners. The CTA shift to <strong>"See your price"</strong> suggests a lower-friction conversion push ahead of the new financial year.</p>
+      </div>
+
+      <div class="insight medium">
+        <div class="insight-tag">Global Meta Ads - UK Expat Push <span class="pill medium">Medium</span></div>
+        <p>AXA's global Facebook page launched <strong>3 new ads this week</strong>, all targeting UK audiences with DCO creatives for AXA Global Healthcare. Full-funnel strategy is visible through prospecting and retargeting variants.</p>
+      </div>
+
+      <div class="insight medium">
+        <div class="insight-tag">Business Page Rebrand <span class="pill medium">Medium</span></div>
+        <p>Business insurance hero copy changed from "Trusted by 1 million businesses" to <strong>"Cover that works as hard as you do."</strong> Products were rebundled under <strong>AXA Business Essential</strong>.</p>
+      </div>
+
+      <div class="insight watch">
+        <div class="insight-tag">Employer Brand Outperforming <span class="pill watch">Watch</span></div>
+        <p>AXA's HR Award post scored <strong>302 reactions, 20 comments, 8 reposts</strong>, significantly outperforming product content. Employer branding is where audience engagement is strongest.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-eyebrow">
+        <span class="platform-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" fill="#1877F2"/></svg>
+        </span>
+        Meta Ads - Top Posts
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="thumb"><img src="https://scontent.fzrh3-1.fna.fbcdn.net/v/t39.35426-6/655893726_933904525709195_1841949143823542613_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=101&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=EsuriduvAooQ7kNvwHGLTpY&_nc_oc=AdpVqAzNBp4QVRr8-7-49Q02YG47f79_G3SCkL3oYo5_hToT64QGVb6CKaS8npIIFdPMsR8x7CdY9oeHdKGp5WSW&_nc_zt=14&_nc_ht=scontent.fzrh3-1.fna&_nc_gid=uknIwqMNYOmXolUifyx47w&_nc_ss=7a3a8&oh=00_AfwhXyrS9fJsUDROPiGLYLzKjFbLwNKuLzWHkDJoYfYS5w&oe=69D0BA95" alt="AXA Meta ad thumbnail 1"></div>
+          <div class="card-platform"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" fill="#1877F2"/></svg>Meta · DCO · New Mar 23</div>
+          <div class="card-title">"For when life goes global"</div>
+          <div class="card-body">International health cover for every step of the way. Personalise your cover and get an instant quote.</div>
+          <div class="card-meta"><span class="meta-tag">UK Prospecting</span><span class="meta-tag">DCO</span></div>
+          <a class="view-link" href="https://www.facebook.com/ads/library/?id=778287415356676" target="_blank">View ad →</a>
+        </div>
+
+        <div class="card">
+          <div class="thumb"><img src="https://scontent.fzrh3-1.fna.fbcdn.net/v/t39.35426-6/480095424_519208641189514_7057176547464726753_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=G1FUGxLrwicQ7kNvwHNv3s3&_nc_oc=Adrr9mayOso2vfp_C49dZ67Bbw8v5rU02hkTjlJyrVwNKKC-e0ibGbPMi2rqVY4f6wswMSBtIMv5R-iB-wJW0QDQ&_nc_zt=14&_nc_ht=scontent.fzrh3-1.fna&_nc_gid=uknIwqMNYOmXolUifyx47w&_nc_ss=7a3a8&oh=00_AfxZRfaWuuC04qK6_QTTpcDPZDcCY3bWfiJdXmtxT6_WUQ&oe=69D0BB44" alt="AXA Meta ad thumbnail 2"></div>
+          <div class="card-platform"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" fill="#1877F2"/></svg>Meta · DCO · New Mar 23</div>
+          <div class="card-title">"Health Cover Wherever You Go"</div>
+          <div class="card-body">Retargeting creative focused on specialist access and urgent diagnosis support.</div>
+          <div class="card-meta"><span class="meta-tag">UK Retargeting</span><span class="meta-tag">DCO</span></div>
+          <a class="view-link" href="https://www.facebook.com/ads/library/?id=867376762085117" target="_blank">View ad →</a>
+        </div>
+
+      
+      </div>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Marktelio Insight - Meta Ads</div>
+        <p>The new ads target UK audiences. AXA Global Healthcare appears to be investing in UK expat health insurance via the global Facebook page, with clear prospecting and retargeting coverage.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-eyebrow">
+        <span class="platform-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><path d="M7.5 10v6.5M7.5 7v.01M10.5 16.5V12.5c0-1.5 1-2 2-2s2 .5 2 2v4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.5" cy="7" r="0.01" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        LinkedIn Posts - This Week
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          
+          <div class="thumb"><img src="https://media.licdn.com/dms/image/v2/D4E22AQFbJehu2FPVJg/feedshare-shrink_2048_1536/B4EZ0qtuJxIsAo-/0/1774538122333?e=1776297600&v=beta&t=VDCciyDJxoQpCGLOCd2631itZWJhRYu4NEgJBRNsOdE" alt="AXA HR award LinkedIn post"></div>
+          <div class="card-platform"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/></svg>LinkedIn · Fri 28 Mar 2026</div>
+          <div class="card-title">Employer Branding</div><div class="top-post-pill">🔥 Top Post</div>
+          <div class="card-body">"AXA Horizon wins the Swiss HR Award for 'Retaining Talents' - recognising our 55+ programme and our commitment to keeping experienced professionals engaged and valued."</div>
+          <div class="card-meta"><span class="meta-tag">302 Reactions</span><span class="meta-tag">20 Comments</span><span class="meta-tag">8 Reposts</span></div>
+          <a class="view-link" href="https://www.linkedin.com/posts/axaswitzerland_axahorizon-55plus-proudtobeaxa-activity-7442952397267619840-2dLC" target="_blank">View post →</a>
+        </div>
+
+        <div class="card">
+          <div class="thumb">
+            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="grad2" x1="0" x2="1"><stop offset="0" stop-color="#0F172A"/><stop offset="0.5" stop-color="#1D4ED8"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+              <rect width="600" height="600" fill="url(#grad2)"/>
+              <circle cx="120" cy="120" r="100" fill="rgba(255,255,255,0.08)"/>
+              <circle cx="500" cy="460" r="130" fill="rgba(255,255,255,0.06)"/>
+              <path d="M60 420 C160 260, 260 500, 380 300 S520 250, 560 380" stroke="rgba(255,255,255,0.28)" stroke-width="12" fill="none" stroke-linecap="round"/>
+              <rect x="70" y="70" width="190" height="34" rx="17" fill="rgba(255,255,255,0.12)"/>
+              <text x="88" y="92" font-family="Montserrat, sans-serif" font-size="14" font-weight="700" fill="#DDF4FF">DIGITAL TRANSFORMATION</text>
+              <text x="70" y="220" font-family="Montserrat, sans-serif" font-size="40" font-weight="800" fill="#FFFFFF">Data-driven</text>
+              <text x="70" y="270" font-family="Montserrat, sans-serif" font-size="40" font-weight="800" fill="#FFFFFF">leadership signal</text>
+              <text x="70" y="330" font-family="Open Sans, sans-serif" font-size="22" fill="#D7E7F8">Abstract visual for Bilanz / Digital Shapers positioning</text>
+            </svg>
+          </div>
+          <div class="card-platform"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/></svg>LinkedIn · Fri 28 Mar 2026</div>
+          <div class="card-title">Leadership / Tech Positioning</div>
+          <div class="card-body">Shared BILANZ article naming CIO Kathrin Braunwarth as Digital Shaper 2026 - "Das Who is Who der Digitalen Schweiz."</div>
+          <div class="card-meta"><span class="meta-tag">54 Reactions</span><span class="meta-tag">1 Comment</span><span class="meta-tag">2 Reposts</span></div>
+          <a class="view-link" href="https://www.linkedin.com/posts/axaswitzerland_schweiz-und-ki-das-passt-noch-nie-hat-activity-7442230165067325440-iVzR" target="_blank">View post →</a>
+        </div>
+
+        <div class="card">
+          <div class="thumb"><img src="https://media.licdn.com/dms/image/v2/D4E10AQHjMgAhgpNZrA/image-shrink_800/B4EZ0fE3N2IQAk-/0/1774342862145?e=1775505600&v=beta&t=3QwYn-0wMtVdstVZtP_sDpU9ruySXIbJUxFcxc2tv90" alt="AXA ARAG LinkedIn post"></div>
+          <div class="card-platform"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/></svg>LinkedIn · Wed 25 Mar 2026</div>
+          <div class="card-title">Legal / B2B Advisory</div>
+          <div class="card-body">ARAG legal protection content: "Business bankruptcy - key questions answered by AXA-ARAG legal experts."</div>
+          <div class="card-meta"><span class="meta-tag">17 Reactions</span><span class="meta-tag">0 Comments</span><span class="meta-tag">1 Repost</span></div>
+          <a class="view-link" href="https://www.linkedin.com/posts/axaswitzerland_niemand-gr%C3%BCndet-ein-unternehmen-mit-dem-gedanken-activity-7442133409050775552-rB9K" target="_blank">View post →</a>
+        </div>
+      </div>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Marktelio Insight - LinkedIn Posts</div>
+        <p>Employer branding is clearly the strongest organic content pattern in this sample. The HR Award post significantly outperformed the other LinkedIn posts, while leadership and advisory content played a supporting role in reinforcing AXA's broader brand narrative.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-eyebrow">Website Changes - This Week</div>
+
+      <div class="change-row">
+        <div class="change-signal"><div class="signal-pill high">High</div></div>
+        <div class="change-content">
+          <div class="change-url">/business-insurance</div>
+          <strong>Hero rewrite + product rebundle</strong>
+          <p>"Trusted by 1 million businesses" changed to <strong>"Cover that works as hard as you do."</strong> Employer's liability and public liability are now bundled as "AXA Business Essential."</p>
+        </div>
+      </div>
+
+      <div class="change-row">
+        <div class="change-signal"><div class="signal-pill high">High</div></div>
+        <div class="change-content">
+          <div class="change-url">/homepage</div>
+          <strong>Crisis response content prominently featured</strong>
+          <p>Crans-Montana fire support, Middle East travel advisory, and Ukraine refugee legal support were all surfaced on the homepage.</p>
+        </div>
+      </div>
+
+      <div class="change-row">
+        <div class="change-signal"><div class="signal-pill medium">Medium</div></div>
+        <div class="change-content">
+          <div class="change-url">/cyber-insurance-plus</div>
+          <strong>Cyber Insurance Plus elevated in nav</strong>
+          <p>Cyber product now appears in primary navigation and featured paid placements.</p>
+        </div>
+      </div>
+
+      <div class="change-row">
+        <div class="change-signal"><div class="signal-pill watch">Watch</div></div>
+        <div class="change-content">
+          <div class="change-url">/young-adults</div>
+          <strong>New young adults landing page live</strong>
+          <p>Dedicated insurance guide page targeting a younger demographic - a new segment push not seen in previous weeks.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-eyebrow">Suggested Follow-Ups</div>
+
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div class="action-content">
+          <strong>Consider reviewing the SME CTA shift</strong>
+          <p>AXA's move to "See your price" may indicate a lower-friction conversion approach. It may be worth assessing whether similar language patterns are emerging across your category.</p>
+          <span class="pill high action-tag">High</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">2</div>
+        <div class="action-content">
+          <strong>Investigate the Business Essential rebrand trajectory</strong>
+          <p>The product rebundling suggests a broader positioning change may be underway. Consider monitoring the business insurance page and related creative over the next two weeks.</p>
+          <span class="pill medium action-tag">Medium</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">3</div>
+        <div class="action-content">
+          <strong>Explore the employer-brand content pattern</strong>
+          <p>AXA's employer-brand posts are generating materially stronger engagement than product content. This may be worth comparing against your own organic content mix.</p>
+          <span class="pill medium action-tag">Medium</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">4</div>
+        <div class="action-content">
+          <strong>Monitor the #DataDrivenCompany narrative</strong>
+          <p>This positioning signal may expand into recruitment, corporate, or product messaging. Keeping it on the watchlist could help identify where AXA takes it next.</p>
+          <span class="pill watch action-tag">Watch</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-logo">Marktel<span class="accent">io</span></div>
+      <div class="footer-tagline">We do the research. You stay ahead.</div>
+      <div class="footer-links">
+        <a href="https://marktel.io">marktel.io</a>
+      </div>
+      <div class="footer-note">You're receiving this because you track <strong>AXA Switzerland</strong> on Marktelio.<br>Report generated Fri 28 Mar 2026 · Reviewed and approved Sat 29 Mar 2026 · Next report: Sat 5 Apr 2026</div>
+    </div>
+  </div>
+</body>
+</html>
