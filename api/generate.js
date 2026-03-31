@@ -440,10 +440,10 @@ function buildEmail(name, d, week, year) {
     <div class="footer-logo"><span class="mark">markte</span><span class="tel">lio</span></div>
     <div class="footer-tagline">We do the research. You stay ahead.</div>
     <div class="footer-links">
-      <a href="https://marktelio.io">marktelio.io</a>
-      <a href="https://marktelio.io/privacy">Privacy Policy</a>
-      <a href="https://marktelio.io/terms">Terms</a>
-      <a href="mailto:hello@marktelio.io">hello@marktelio.io</a>
+      <a href="https://marktel.io">marktel.io</a>
+      <a href="https://marktel.io/privacy">Privacy Policy</a>
+      <a href="https://marktel.io/terms">Terms</a>
+      <a href="mailto:hello@marktel.io">hello@marktel.io</a>
     </div>
     <div class="footer-note">
       Hi ${name} &mdash; your on-demand report for <strong>AXA Switzerland</strong> is ready.<br>
@@ -481,7 +481,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Marktelio Intelligence <reports@marktelio.io>',
+        from: 'Marktelio Intelligence <reports@marktel.io>',
         to: [email],
         subject: `AXA Switzerland Intelligence Report — W${WEEK} ${YEAR}`,
         html,
