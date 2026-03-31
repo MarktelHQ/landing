@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marktel — How It Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0D0D1A;
+    font-family: 'Open Sans', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    padding: 48px 24px 64px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+  .logo .tel { color: #00E5C8; }
+  .logo .mark { color: #fff; }
+  header p {
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: #556688;
+  }
+
+  .flow {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Vertical line */
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #00E5C8, #1A2A3A);
+    border-radius: 2px;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    border: 2px solid #1A2A3A;
+  }
+
+  .step-body {
+    background: #111827;
+    border: 1px solid #1A2A3A;
+    border-radius: 14px;
+    padding: 18px 20px;
+    flex: 1;
+    margin-top: 6px;
+  }
+
+  .step-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+
+  .step-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: #8888AA;
+    line-height: 1.6;
+  }
+
+  .step-desc strong { color: #AABBCC; }
+
+  .step-tech {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: #1A2A3A;
+    color: #556688;
+  }
+
+  /* Spacer arrow between groups */
+  .group-gap {
+    height: 18px;
+  }
+
+  /* Section divider */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0 20px 76px;
+  }
+  .section-label span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .s-user span    { background: #0A1628; color: #1971c2; border: 1px solid #1A3A5A; }
+  .s-collect span { background: #1A1000; color: #e65100; border: 1px solid #3A2000; }
+  .s-build span   { background: #0A1A0A; color: #2e7d32; border: 1px solid #1A3A1A; }
+  .s-deliver span { background: #1A0A2A; color: #7b1fa2; border: 1px solid #3A1A4A; }
+  .s-loop span    { background: #0A1818; color: #00A896; border: 1px solid #1A3A38; }
+
+  /* Note at bottom */
+  .note {
+    max-width: 560px;
+    margin: 36px auto 0;
+    background: #111827;
+    border: 1px solid #1A2A3A;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 12px;
+    color: #556688;
+    line-height: 1.7;
+    text-align: center;
+  }
+  .note strong { color: #00E5C8; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="mark">markte</span><span class="tel">lio</span></div>
+  <p>How It Works</p>
+</header>
+
+<div class="flow">
+
+  <!-- USER -->
+  <div class="section-label s-user"><span>1 — User arrives</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1628;">🌐</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#1971c2;">Landing Page</div>
+      <div class="step-title">Visits marktel.io</div>
+      <div class="step-desc">Prospect lands on the site, reads the pitch and clicks <strong>Get my free report</strong>.</div>
+      <span class="step-tech">marktel.io</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1628;">✍️</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#1971c2;">Demo Form</div>
+      <div class="step-title">Enters name, email + competitor</div>
+      <div class="step-desc">They type in <strong>their name, email,</strong> and the company they want intel on (e.g. “AXA”). Hit submit.</div>
+      <span class="step-tech">HTML Form</span>
+    </div>
+  </div>
+
+  <!-- DATA COLLECTION -->
+  <div class="section-label s-collect"><span>2 — Data collection fires</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A1000;">🔗</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#e65100;">LinkedIn</div>
+      <div class="step-title">LinkedIn scraped</div>
+      <div class="step-desc">Recent <strong>posts, themes, and ad activity</strong> pulled from the target company’s LinkedIn profile.</div>
+      <span class="step-tech">linkedin.js</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A1000;">📘</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#e65100;">Meta Ad Library</div>
+      <div class="step-title">Active ads collected</div>
+      <div class="step-desc"><strong>Live ads, formats, markets and targeting signals</strong> pulled from Meta’s public Ad Library.</div>
+      <span class="step-tech">facebook.js</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A1000;">🌍</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#e65100;">Website Monitor</div>
+      <div class="step-title">Website crawled</div>
+      <div class="step-desc">Detects <strong>page changes, new content,</strong> pricing updates or campaign pages on the target’s site.</div>
+      <span class="step-tech">Firecrawl</span>
+    </div>
+  </div>
+
+  <!-- BUILD -->
+  <div class="section-label s-build"><span>3 — Report built</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1A0A;">⚡</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#2e7d32;">API</div>
+      <div class="step-title">Serverless function runs</div>
+      <div class="step-desc">Vercel receives the form submission and <strong>orchestrates the full pipeline</strong> — collect, structure, build.</div>
+      <span class="step-tech">api/generate.js</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1A0A;">🗄️</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#2e7d32;">Database</div>
+      <div class="step-title">Lead logged in Supabase</div>
+      <div class="step-desc">Name, email and company are <strong>stored instantly</strong> in Supabase — ready for CRM and follow-up.</div>
+      <span class="step-tech">Supabase</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1A0A;">📊</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#2e7d32;">Report</div>
+      <div class="step-title">Branded HTML report assembled</div>
+      <div class="step-desc">All signals are structured into a <strong>fully branded intelligence report</strong> — ranked insights, ads, site changes, actions.</div>
+      <span class="step-tech">buildEmail()</span>
+    </div>
+  </div>
+
+  <!-- AI + HUMAN -->
+  <div class="section-label" style="margin: 28px 0 20px 76px;"><span style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 3px 12px; border-radius: 20px; white-space: nowrap; background: #1A0F00; color: #f59e0b; border: 1px solid #3A2800;">3.5 — Refined by AI &amp; Human</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A0F00;">🧠</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#f59e0b;">AI Editorial Agent</div>
+      <div class="step-title">Marketing expert layer applied</div>
+      <div class="step-desc">A specialised <strong>AI editorial agent</strong> reviews every signal — rewriting, prioritising and framing insights the way a <strong>senior marketing strategist</strong> would. Tone, clarity and strategic relevance enforced.</div>
+      <span class="step-tech">Claude — Editorial Prompt</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A0F00;">👁️</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#f59e0b;">Human Review</div>
+      <div class="step-title">Quality check before send</div>
+      <div class="step-desc">A Marktel team member <strong>reviews and approves</strong> the report before delivery — ensuring accuracy, brand fit, and client relevance. One click to send.</div>
+      <span class="step-tech">Human-in-the-Loop</span>
+    </div>
+  </div>
+
+  <!-- DELIVER -->
+  <div class="section-label s-deliver"><span>4 — Delivered to inbox</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A0A2A;">📨</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#7b1fa2;">Email</div>
+      <div class="step-title">Report sent via Resend</div>
+      <div class="step-desc">The report lands in their inbox <strong>within seconds</strong>, sent from <strong>reports@marktel.io</strong>.</div>
+      <span class="step-tech">Resend</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#1A0A2A;">📬</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#7b1fa2;">Client</div>
+      <div class="step-title">Prospect reads their intel</div>
+      <div class="step-desc">They open a <strong>real, beautiful, actionable report</strong> on their competitor. First impression = product demo.</div>
+      <span class="step-tech">Inbox</span>
+    </div>
+  </div>
+
+  <!-- LOOP -->
+  <div class="section-label s-loop"><span>5 — Repeats weekly</span></div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1818;">🔁</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#00A896;">Automation</div>
+      <div class="step-title">Fresh report every Monday</div>
+      <div class="step-desc">A scheduled job re-runs the full pipeline weekly — <strong>new signals, updated report, auto-delivered.</strong> No manual work.</div>
+      <span class="step-tech">Vercel Cron</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-icon" style="background:#0A1818;">🤝</div>
+    <div class="step-body">
+      <div class="step-label" style="color:#00A896;">Sales</div>
+      <div class="step-title">Marktel team notified</div>
+      <div class="step-desc">Engaged leads surface from Supabase — <strong>ready for a demo call</strong> or upgrade conversation.</div>
+      <span class="step-tech">CRM / Slack</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <strong>All data is public.</strong> LinkedIn posts, Meta Ad Library, and publicly indexed websites only.  No private data. GDPR-compliant by design. Made in Switzerland 🇨🇭
+</div>
+
+</body>
+</html>
