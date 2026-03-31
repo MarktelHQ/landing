@@ -4,48 +4,184 @@
 
 export const config = { runtime: 'edge' };
 
-// ─── AXA SIGNALS ────────────────────────────────────────────────────────────
+// ─── AXA SIGNALS — W13 2026 ─────────────────────────────────────────────────
+// All data real and verified. Sources:
+//   LinkedIn  : ScrapeCreators API, collected 2026-03-31 (engagement metrics not returned by endpoint)
+//   Facebook  : Meta Ad Library, real ad IDs
+//   Web       : Firecrawl scrape of axa.ch, 2026-03-29
 const AXA_SIGNALS = {
   company: 'AXA Switzerland',
-  week: 13, year: 2026,
+  week: 13,
+  year: 2026,
+
+  // ── LINKEDIN ──────────────────────────────────────────────────────────────
   linkedin: {
-    totalFollowers: 89400, followerGrowth: '+1.2% WoW',
+    totalFollowers: null, // not returned by ScrapeCreators endpoint
+    followerGrowth: 'not captured',
+    note: 'Real posts scraped 2026-03-31. Engagement counts (likes/comments/shares) not returned by API — content and themes are verified.',
     posts: [
-      { date: '2026-03-25', content: 'AXA Switzerland launches new digital health portal for SME clients, integrating telemedicine and claims in one app.', likes: 312, comments: 28, shares: 45, theme: 'Digital Health' },
-      { date: '2026-03-24', content: 'Our 2025 sustainability report is live. Net-zero target brought forward to 2040.', likes: 198, comments: 14, shares: 31, theme: 'ESG / Sustainability' },
-      { date: '2026-03-22', content: 'Partnership with Swiss Startup Association - supporting 50 high-growth ventures in 2026.', likes: 421, comments: 52, shares: 67, theme: 'Partnerships' },
+      {
+        date: '2026-03-31',
+        content: 'AXA KMU-Magazin "Meine Firma" spotlights three Swiss AgriFood startups: Planted Foods (97% less CO2 vs conventional meat), New Roots (plant-based Swiss cheese — in Coop & Migros), UMAMI AG (aquaponics + vertical farming, 90% less water). ETH-rooted innovation, ESG editorial framing.',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'ESG / AgriFood / SME Content',
+      },
+      {
+        date: '2026-03-26',
+        content: 'AXA wins HR Award "Retaining Talents" for AXA Horizon — programme supporting employees 55+ to extend knowledge transfer beyond retirement. Positioned as future-proofing talent amid demographic change. #AXAHorizon #55plus #HRAward',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'Employer Brand / HR Innovation',
+      },
+      {
+        date: '2026-03-24',
+        content: 'CIO Kathrin Braunwarth inducted into Digital Shapers 2026. AXA Switzerland positioning as a "Data Driven Company" under her leadership since 2023. #DataDrivenCompany #DigitalShapers',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'Digital Leadership / Data Strategy',
+      },
+      {
+        date: '2026-03-24',
+        content: 'AXA-ARAG legal experts answer key SME bankruptcy questions: debt resolution, employment contracts, rescue options, personal credit impact. Practical blog targeting KMU decision-makers facing insolvency risk.',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'Legal / KMU / AXA-ARAG',
+      },
+      {
+        date: '2026-03-17',
+        content: 'AXA + partner Consulta advise SME owners: start succession planning 5 years before sale. Key messages: external valuation objectivity, tax benefits of converting to AG, reducing owner-dependency to attract buyers.',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'SME Succession / KMU Partnership',
+      },
+      {
+        date: '2026-03-10',
+        content: 'Payment default risk for KMU: Paolo Larentis (AXA Sales Director, Credit & Caution) — 1-in-3 bankruptcies is a domino effect. Five SME liquidity protection measures outlined. Blog targets KMU finance decision-makers.',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'KMU Risk / Credit Insurance',
+      },
+      {
+        date: '2026-03-05',
+        content: 'Workplace accident insurance explainer (UVG): AXA clarifies BU vs NBU coverage based on weekly hours worked. Practical compliance content for Swiss employers. Signals focus on SME HR/employer obligations.',
+        likes: 0, comments: 0, shares: 0,
+        theme: 'HR / Insurance Education / Employer Obligations',
+      },
     ],
   },
+
+  // ── FACEBOOK / META ADS ───────────────────────────────────────────────────
   facebook: {
-    pageFollowers: 124000, avgEngagementRate: '3.8%',
-    posts: [
-      { date: '2026-03-26', content: 'Spring driving tips - stay safe on wet roads. AXA Motor covers you 24/7.', likes: 543, comments: 61, shares: 88, theme: 'Consumer / Motor' },
-      { date: '2026-03-23', content: 'Win a weekend wellness retreat! Enter our giveaway by sharing your wellness routine.', likes: 1204, comments: 237, shares: 312, theme: 'Activation / Giveaway' },
+    note: 'Real ad IDs from Meta Ad Library. AXA Switzerland-specific Swiss paid social: zero detected this week.',
+    ads: [
+      {
+        id: '778287415356676',
+        title: 'Up To 2 Months Free',
+        body: 'Experts in expat healthcare — up to 2 months of free cover on annual policies. For the global go-getters.',
+        market: 'UK', targeting: 'HNWI Female Prospecting', format: 'DCO', variants: 8,
+        startDate: '2026-03-23', active: true, cta: 'Get Quote',
+        url: 'https://www.facebook.com/ads/library?id=778287415356676',
+      },
+      {
+        id: '452897397123667',
+        title: 'Health Cover Wherever You Go',
+        body: 'Whether you need a doctor for those headaches or specialist care for an urgent diagnosis — access to healthcare at over 2 million trusted providers worldwide.',
+        market: 'UK', targeting: 'Retargeting Leads', format: 'DCO',
+        startDate: '2024-07-11', active: true, cta: 'Get Quote',
+        url: 'https://www.facebook.com/ads/library?id=452897397123667',
+      },
+      {
+        id: '867376762085117',
+        title: 'Assurance Sante Expats -10%',
+        body: 'Assurance sante mondiale choisie par des millions. -10% sur votre devis selon conditions.',
+        market: 'Belgium', targeting: 'FR HNWI Female Prospecting', format: 'Image',
+        startDate: '2025-02-16', active: true, cta: 'Get Quote',
+        url: 'https://www.facebook.com/ads/library?id=867376762085117',
+      },
+      {
+        id: '1391641185777316',
+        title: 'Connecte ou que vous alliez',
+        body: 'Une assurance sante mondiale qui donne acces a 1.9 million de prestataires de sante.',
+        market: 'France', targeting: 'FR Lookalike Male Prospecting', format: 'Video',
+        startDate: '2024-07-11', active: true, cta: 'Learn More',
+        url: 'https://www.facebook.com/ads/library?id=1391641185777316',
+      },
+      {
+        id: '1155719633044613',
+        title: 'Expert en couverture sante expatries',
+        body: 'Obtenez un devis pour un acces a des soins medicaux prives a letranger et un support client fiable 24h/24.',
+        market: 'France', targeting: 'FR Retargeting Leads', format: 'DCO',
+        startDate: '2026-01-09', active: true, cta: 'Get Quote',
+        url: 'https://www.facebook.com/ads/library?id=1155719633044613',
+      },
     ],
   },
+
+  // ── WEB / FIRECRAWL ───────────────────────────────────────────────────────
+  // Source: Firecrawl scrape of axa.ch, 2026-03-29
   web: {
-    campaigns: ['Digital Health Hub launch (Mar 2026)', 'AXA for Startups programme expansion', 'SME bundled insurance refresh'],
-    pricing: 'No public price changes detected this week.',
+    pageChanges: [
+      {
+        page: '/homepage',
+        level: 'high',
+        title: 'Crans-Montana fire response page live',
+        detail: 'Prominent homepage banner directing customers affected by the Crans-Montana fire to axa.ch/en/landingpage/crans-montana.html. Offers Care and Case Management support and insurance benefit guidance. Time-sensitive, high-profile crisis communication — no paid social amplification detected to match.',
+      },
+      {
+        page: '/homepage',
+        level: 'high',
+        title: 'Middle East travel advisory persists',
+        detail: 'Emergency line (+41 800 809 809) featured on homepage for customers affected by Middle East conflict. Persistent notice signals ongoing claims exposure and doubles as a visible trust signal for travel insurance shoppers.',
+      },
+      {
+        page: '/homepage',
+        level: 'medium',
+        title: 'Homepage blog: Pillar 3, cohabitation, young adults insurance',
+        detail: 'Four articles live: cohabitation + retirement provision (Pillar 3), winter driving, child support, cancer prevention. Q1 tax-season timing on the pension piece is deliberate. Young adults insurance guide also newly surfaced.',
+      },
+      {
+        page: '/young-adults',
+        level: 'watch',
+        title: 'New young adults landing page live',
+        detail: 'Dedicated insurance guide page targeting younger demographic — new segment push not seen in previous weeks.',
+      },
+    ],
+    pricing: 'Belgium campaign active with 10% discount offer on expat health insurance (ad ID 867376762085117). No CH-specific price changes detected on axa.ch.',
+    sentiment: 'Positive — crisis-first homepage positioning (Crans-Montana + Middle East) demonstrates reactive brand management. Zero Switzerland-specific paid social detected on Meta or LinkedIn this week. AXA Global Healthcare dominating group-level paid activity across UK/France/Belgium.',
   },
-  sentiment: 'Positive - health innovation and sustainability messaging dominating.',
 };
 
 // ─── CLAUDE PROMPT ──────────────────────────────────────────────────────────
 function buildPrompt(s) {
-  return `You are Marktel, a Swiss B2B competitive intelligence analyst. Analyse these signals for ${s.company} W${s.week} ${s.year} and return ONLY a valid JSON object - no markdown, no explanation, no code fences.
+  const liPosts = s.linkedin.posts
+    .map(p => `[${p.date}] ${p.content} | Theme: ${p.theme} | Engagement: not captured`)
+    .join('\n');
 
-SIGNALS:
-LinkedIn ${s.linkedin.totalFollowers} followers ${s.linkedin.followerGrowth}:
-${s.linkedin.posts.map(p => `[${p.date}] ${p.content} (likes:${p.likes} comments:${p.comments} shares:${p.shares}) Theme:${p.theme}`).join('\n')}
+  const fbAds = s.facebook.ads
+    .map(a => `[${a.market}] "${a.title}" — ${a.body} | Format: ${a.format} | Started: ${a.startDate} | CTA: ${a.cta}`)
+    .join('\n');
 
-Facebook ${s.facebook.pageFollowers} followers avg ${s.facebook.avgEngagementRate}:
-${s.facebook.posts.map(p => `[${p.date}] ${p.content} (likes:${p.likes} comments:${p.comments} shares:${p.shares}) Theme:${p.theme}`).join('\n')}
+  const webChanges = s.web.pageChanges
+    .map(w => `[${w.level.toUpperCase()}] ${w.page}: ${w.title} — ${w.detail}`)
+    .join('\n');
 
-Campaigns: ${s.web.campaigns.join(', ')}
+  return `You are Marktel, a Swiss B2B competitive intelligence analyst. Analyse these REAL, verified signals for ${s.company} W${s.week} ${s.year} and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
+
+IMPORTANT NOTES:
+- LinkedIn engagement counts (likes/comments/shares) were NOT returned by the API. Analyse CONTENT THEMES and MESSAGING STRATEGY only — do not comment on engagement numbers.
+- Facebook data is real Meta Ad Library data with verified ad IDs.
+- Web data is from a real Firecrawl scrape of axa.ch on 2026-03-29.
+- The Crans-Montana fire is a REAL, active Swiss crisis event. Treat it as the highest-priority homepage signal.
+- Zero Switzerland-specific paid social (Meta or LinkedIn) was detected this week — this is a confirmed gap.
+
+LINKEDIN POSTS (real, scraped 2026-03-31 — engagement not captured):
+${liPosts}
+
+FACEBOOK / META ADS (real Meta Ad Library — AXA Global Healthcare, no CH-specific ads detected):
+${fbAds}
+
+WEBSITE CHANGES (Firecrawl scrape axa.ch 2026-03-29):
+${webChanges}
+
 Pricing: ${s.web.pricing}
-Sentiment: ${s.sentiment}
+Overall sentiment: ${s.web.sentiment}
 
-Return this exact JSON structure with your analysis (all strings must be plain text, no HTML tags):
+Return this exact JSON structure with your analysis (all strings must be plain text, no HTML):
 {
   "hero_headline": "one sharp punchy headline summarising the biggest signal this week (max 12 words)",
   "hero_sub": "one sentence expanding on the headline with a key implication (max 25 words)",
@@ -59,11 +195,13 @@ Return this exact JSON structure with your analysis (all strings must be plain t
     { "level": "watch", "tag": "short tag label", "body": "2-3 sentence insight" }
   ],
   "linkedin_posts": [
-    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform and reach details", "content": "quote or summary of post content", "stat1_label": "label", "stat1_val": "value", "stat2_label": "label", "stat2_val": "value", "stat3_label": "label", "stat3_val": "value", "analyst_note": "sharp 2 sentence analyst commentary with **bold** key phrase" },
-    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform and reach details", "content": "quote or summary", "stat1_label": "label", "stat1_val": "value", "stat2_label": "label", "stat2_val": "value", "stat3_label": "label", "stat3_val": "value", "analyst_note": "sharp 2 sentence analyst commentary" }
+    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform and theme details", "content": "quote or summary of post content", "stat1_label": "Theme", "stat1_val": "theme value", "stat2_label": "Date", "stat2_val": "date", "stat3_label": "Signal", "stat3_val": "High/Med/Watch", "analyst_note": "sharp 2 sentence analyst commentary with **bold** key phrase" },
+    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform and theme details", "content": "quote or summary", "stat1_label": "Theme", "stat1_val": "theme value", "stat2_label": "Date", "stat2_val": "date", "stat3_label": "Signal", "stat3_val": "High/Med/Watch", "analyst_note": "sharp 2 sentence analyst commentary" },
+    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform and theme details", "content": "quote or summary", "stat1_label": "Theme", "stat1_val": "theme value", "stat2_label": "Date", "stat2_val": "date", "stat3_label": "Signal", "stat3_val": "High/Med/Watch", "analyst_note": "sharp 2 sentence analyst commentary" }
   ],
   "facebook_posts": [
-    { "initials": "2 letter initials", "color": "hex color", "title": "post title", "meta": "platform details", "content": "summary", "stat1_label": "label", "stat1_val": "value", "stat2_label": "label", "stat2_val": "value", "stat3_label": "label", "stat3_val": "value", "analyst_note": "sharp 2 sentence note" }
+    { "initials": "2 letter initials", "color": "hex color", "title": "ad title", "meta": "market and format details", "content": "summary of ad copy", "stat1_label": "Market", "stat1_val": "value", "stat2_label": "Format", "stat2_val": "value", "stat3_label": "Started", "stat3_val": "value", "analyst_note": "sharp 2 sentence note" },
+    { "initials": "2 letter initials", "color": "hex color", "title": "ad title", "meta": "market and format details", "content": "summary", "stat1_label": "Market", "stat1_val": "value", "stat2_label": "Format", "stat2_val": "value", "stat3_label": "Started", "stat3_val": "value", "analyst_note": "sharp 2 sentence note" }
   ],
   "actions": [
     { "level": "high", "title": "action title", "body": "2 sentence explanation" },
@@ -74,7 +212,7 @@ Return this exact JSON structure with your analysis (all strings must be plain t
 }`;
 }
 
-// ─── HTML BUILDER ───────────────────────────────────────────────────────────
+// ─── HTML BUILDER ────────────────────────────────────────────────────────────
 function bold(str) {
   return str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 }
@@ -245,9 +383,9 @@ function buildEmail(name, d, week, year) {
   <!-- SIGNAL ROW -->
   <div class="signal-row">
     <div class="signal-box"><div class="signal-label">Total Signals</div><div class="signal-val">${d.total_signals}</div><div class="signal-sub">This week</div></div>
-    <div class="signal-box"><div class="signal-label">High Priority</div><div class="signal-val">${d.high_priority}</div><div class="signal-sub">Flagged High</div></div>
+    <div class="signal-box"><div class="signal-label">High Priority</div><div class="signal-val">${d.high_priority}</div><div class="signal-sub">Act now</div></div>
     <div class="signal-box"><div class="signal-label">LinkedIn</div><div class="signal-val">${d.linkedin_signals}</div><div class="signal-sub">Posts tracked</div></div>
-    <div class="signal-box"><div class="signal-label">Facebook</div><div class="signal-val">${d.facebook_signals}</div><div class="signal-sub">Posts tracked</div></div>
+    <div class="signal-box"><div class="signal-label">Meta Ads</div><div class="signal-val">${d.facebook_signals}</div><div class="signal-sub">Active creatives</div></div>
   </div>
 
   <div class="body-wrap">
@@ -260,13 +398,13 @@ function buildEmail(name, d, week, year) {
 
     <!-- LINKEDIN -->
     <div class="section">
-      <div class="section-eyebrow"><span class="li-icon"></span> LinkedIn &mdash; This Week</div>
+      <div class="section-eyebrow"><span class="li-icon"></span> LinkedIn &mdash; Posts This Week</div>
       ${liPosts}
     </div>
 
-    <!-- FACEBOOK -->
+    <!-- FACEBOOK / META -->
     <div class="section">
-      <div class="section-eyebrow"><span class="fb-icon"></span> Facebook &mdash; This Week</div>
+      <div class="section-eyebrow"><span class="fb-icon"></span> Meta Ads &mdash; Active Creatives</div>
       ${fbPosts}
     </div>
 
@@ -283,10 +421,10 @@ function buildEmail(name, d, week, year) {
     <div class="footer-logo">markte<span class="tel">lio</span></div>
     <div class="footer-tagline">We do the research. You stay ahead.</div>
     <div class="footer-links">
-      <a href="https://marktelio.io">marktelio.io</a>
-      <a href="https://marktelio.io/privacy">Privacy</a>
-      <a href="https://marktelio.io/terms">Terms</a>
-      <a href="mailto:hello@marktelio.io">hello@marktelio.io</a>
+      <a href="https://marktel.io">marktel.io</a>
+      <a href="https://marktel.io/legal">Privacy</a>
+    
+     
     </div>
     <div class="footer-note">Hi ${name} &mdash; your on-demand report for <strong>AXA Switzerland</strong> is ready.<br>Made in Switzerland &#127464;&#127469;</div>
   </div>
@@ -296,7 +434,7 @@ function buildEmail(name, d, week, year) {
 </html>`;
 }
 
-// ─── MAIN HANDLER ───────────────────────────────────────────────────────────
+// ─── MAIN HANDLER ────────────────────────────────────────────────────────────
 export default async function handler(req) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -317,7 +455,7 @@ export default async function handler(req) {
 
   const { week, year } = AXA_SIGNALS;
 
-  // Step 1: Claude returns JSON content
+  // Step 1: Claude returns JSON analysis
   let reportData;
   try {
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -329,7 +467,7 @@ export default async function handler(req) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 2000,
+        max_tokens: 2500,
         messages: [{ role: 'user', content: buildPrompt(AXA_SIGNALS) }],
       }),
     });
@@ -339,11 +477,11 @@ export default async function handler(req) {
     raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
     reportData = JSON.parse(raw);
   } catch (err) {
-    console.error('[Marktel] Claude error:', err.message);
+    console.error('[Marktelio] Claude error:', err.message);
     return new Response(JSON.stringify({ error: 'Report generation failed' }), { status: 500, headers });
   }
 
-  // Step 2: Build full HTML from template
+  // Step 2: Build full HTML
   const html = buildEmail(name, reportData, week, year);
 
   // Step 3: Send via Resend
@@ -355,7 +493,7 @@ export default async function handler(req) {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Marktelio Intelligence <reports@marktel.io>',
+        from: 'Marktelio Intelligence <reports@marktelio.io>',
         to: [email],
         subject: `AXA Switzerland Intelligence Report \u2014 W${week} ${year}`,
         html,
@@ -363,7 +501,7 @@ export default async function handler(req) {
     });
     if (!resendRes.ok) throw new Error(await resendRes.text());
   } catch (err) {
-    console.error('[Marktel] Resend error:', err.message);
+    console.error('[Marktelio] Resend error:', err.message);
     return new Response(JSON.stringify({ error: 'Email delivery failed' }), { status: 500, headers });
   }
 
