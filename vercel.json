@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "outputDirectory": "public",
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/demo", "dest": "/demo.html" },
+    { "src": "/thank-you", "dest": "/thank-you.html" },
+    { "src": "/legal", "dest": "/legal.html" },
+    { "src": "/privacy", "dest": "/legal.html" },
+    { "src": "/terms", "dest": "/legal.html" },
+    { "src": "/cookies", "dest": "/legal.html" },
+    { "src": "/disclaimer", "dest": "/legal.html" },
+    { "src": "/contact", "dest": "/legal.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

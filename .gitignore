@@ -1,0 +1,28 @@
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.template
+
+# Dependencies
+node_modules/
+
+# Collector output
+collectors/output/
+
+# Report output
+output/
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+*.tmp
+*.temp
