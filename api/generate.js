@@ -491,6 +491,7 @@ export default async function handler(req) {
       const html = buildEmail(name, reportData, week, year);
 
       // Step 3: Send via Resend
+      console.log('[Resend] Firing — to:', email, 'key set:', !!process.env.RESEND_API_KEY);
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -504,7 +505,9 @@ export default async function handler(req) {
           html,
         }),
       });
-      if (!resendRes.ok) throw new Error(await resendRes.text());
+      const resendBody = await resendRes.text();
+      console.log('[Resend] status:', resendRes.status, resendBody);
+      if (!resendRes.ok) throw new Error(resendBody);
 
       clearInterval(heartbeat);
       await writer.write(enc.encode(JSON.stringify({ success: true, message: `Report sent to ${email}` })));
