@@ -1,261 +1,226 @@
-// api/generate.js — Marktel on-demand report endpoint (Vercel Serverless)
-// POST /api/generate
-// Body: { name, email, competitor, competitorHandle, competitorPageId }
+// api/generate.js — Marktel demo endpoint (Vercel Edge Runtime)
+// POST /api/generate  —  Body: { name, email }
+// Competitor hardcoded to AXA for demo
+// Edge Runtime: 30s wall time — fits Claude Haiku + Resend comfortably
 
-import { createClient } from '@supabase/supabase-js';
+export const config = { runtime: 'edge' };
+
+import Anthropic from '@anthropic-ai/sdk';
 import { Resend } from 'resend';
-import { execSync } from 'child_process';
-import path from 'path';
-import fs from 'fs';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Competitors config — expand as needed
-const COMPETITORS = {
-  axa: {
-    label: 'AXA Switzerland',
-    linkedinHandle: 'axaswitzerland',
-    facebookPageId: '187891771259726',
+// ─── AXA Switzerland — pre-built signal data ──────────────────────────────
+const AXA_SIGNALS = {
+  company: 'AXA Switzerland',
+  week: 13,
+  year: 2026,
+  linkedin: {
+    posts: [
+      {
+        date: '2026-03-25',
+        content: 'AXA Switzerland launches new digital health portal for SME clients, integrating telemedicine and claims in one app.',
+        engagement: { likes: 312, comments: 28, shares: 45 },
+        theme: 'Digital Health',
+      },
+      {
+        date: '2026-03-24',
+        content: 'Our 2025 sustainability report is live. Net-zero target brought forward to 2040.',
+        engagement: { likes: 198, comments: 14, shares: 31 },
+        theme: 'ESG / Sustainability',
+      },
+      {
+        date: '2026-03-22',
+        content: 'Proud to announce our partnership with Swiss Startup Association — supporting 50 high-growth ventures in 2026.',
+        engagement: { likes: 421, comments: 52, shares: 67 },
+        theme: 'Partnerships / Ecosystem',
+      },
+    ],
+    followerGrowth: '+1.2% WoW',
+    totalFollowers: 89400,
+    topTheme: 'Digital Health',
   },
-  zurich: {
-    label: 'Zurich Insurance',
-    linkedinHandle: 'zurich-insurance-group',
-    facebookPageId: '104059546295898',
+  facebook: {
+    posts: [
+      {
+        date: '2026-03-26',
+        content: 'Spring driving tips — stay safe on wet roads. AXA Motor covers you 24/7.',
+        engagement: { likes: 543, comments: 61, shares: 88 },
+        theme: 'Consumer / Motor',
+      },
+      {
+        date: '2026-03-23',
+        content: 'Win a weekend wellness retreat! Enter our giveaway by sharing your wellness routine.',
+        engagement: { likes: 1204, comments: 237, shares: 312 },
+        theme: 'Activation / Giveaway',
+      },
+    ],
+    pageFollowers: 124000,
+    avgEngagementRate: '3.8%',
   },
-  helvetia: {
-    label: 'Helvetia',
-    linkedinHandle: 'helvetia-group',
-    facebookPageId: '161548790558',
+  web: {
+    recentCampaigns: [
+      'Digital Health Hub launch (Mar 2026)',
+      'AXA for Startups programme expansion',
+      'SME bundled insurance refresh',
+    ],
+    pricingSignals: 'No public price changes detected this week.',
   },
-  allianz: {
-    label: 'Allianz Schweiz',
-    linkedinHandle: 'allianz',
-    facebookPageId: '113928028629169',
-  },
+  sentiment: 'Positive — health innovation and sustainability messaging dominating.',
 };
 
-function getCurrentWeek() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const diff = now - start;
-  const oneWeek = 1000 * 60 * 60 * 24 * 7;
-  return Math.ceil(diff / oneWeek);
+// ─── Email HTML template ───────────────────────────────────────────────────
+function buildEmailHtml(name, reportBody, week, year) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXA Switzerland Intelligence Report — W${week} ${year}</title>
+<style>
+  body { margin:0; padding:0; background:#F0F1F5; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; }
+  .wrapper { max-width:640px; margin:0 auto; padding:32px 16px; }
+  .header { background:#0D0D1A; border-radius:16px 16px 0 0; padding:32px 36px; }
+  .logo-mark { display:inline-block; width:36px; height:36px; background:linear-gradient(135deg,#00A896,#00E5C8); border-radius:9px; text-align:center; line-height:36px; font-weight:900; font-size:17px; color:#0D0D1A; margin-bottom:16px; }
+  .header h1 { margin:0; font-size:22px; font-weight:800; color:#fff; letter-spacing:-0.5px; }
+  .header p { margin:6px 0 0; font-size:13px; color:#8888AA; }
+  .body { background:#fff; padding:36px; border-left:1px solid #E8E9F0; border-right:1px solid #E8E9F0; }
+  .greeting { font-size:15px; color:#0D0D1A; margin-bottom:24px; }
+  .report-content { font-size:14px; color:#333; line-height:1.7; }
+  .report-content h2 { font-size:16px; font-weight:800; color:#0D0D1A; border-left:3px solid #00E5C8; padding-left:12px; margin:28px 0 12px; }
+  .report-content h3 { font-size:13px; font-weight:700; color:#00A896; margin:16px 0 6px; text-transform:uppercase; letter-spacing:0.5px; }
+  .report-content p { margin:0 0 14px; }
+  .report-content ul { padding-left:20px; margin:0 0 14px; }
+  .report-content li { margin-bottom:6px; }
+  .badge { display:inline-block; background:#E6FDF9; color:#00A896; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-right:6px; }
+  .footer-bar { background:#0D0D1A; border-radius:0 0 16px 16px; padding:24px 36px; }
+  .footer-bar p { margin:0; font-size:12px; color:#556688; }
+  .footer-bar a { color:#8888AA; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo-mark">M</div>
+    <h1>AXA Switzerland — Intelligence Report</h1>
+    <p>Week ${week}, ${year} &nbsp;·&nbsp; Generated by Marktel AI</p>
+  </div>
+  <div class="body">
+    <p class="greeting">Hi ${name},</p>
+    <p class="greeting" style="color:#556688;">Here is your on-demand competitor intelligence briefing for <strong>AXA Switzerland</strong>.</p>
+    <div class="report-content">
+      ${reportBody}
+    </div>
+  </div>
+  <div class="footer-bar">
+    <p>Marktel Intelligence &middot; Made in Switzerland<br/>
+    <a href="https://marktel.io/privacy">Privacy</a> &middot;
+    <a href="https://marktel.io/terms">Terms</a> &middot;
+    <a href="https://marktel.io/contact">Contact</a></p>
+  </div>
+</div>
+</body>
+</html>`;
 }
 
-function runCollector(script, args) {
-  const cmd = `node collectors/${script} ${args}`;
-  console.log(`[API] Running: ${cmd}`);
-  try {
-    const output = execSync(cmd, {
-      cwd: process.cwd(),
-      timeout: 60000,
-      env: process.env,
-    });
-    console.log(`[API] ${script} output:`, output.toString());
-    return true;
-  } catch (err) {
-    console.error(`[API] ${script} failed:`, err.message);
-    return false;
-  }
-}
-
-function runReportGenerator(client, week, year) {
-  const cmd = `node generate-report.js --client ${client} --week ${week} --year ${year}`;
-  console.log(`[API] Running: ${cmd}`);
-  try {
-    const output = execSync(cmd, {
-      cwd: process.cwd(),
-      timeout: 120000,
-      env: process.env,
-    });
-    console.log('[API] Report generated:', output.toString());
-    return true;
-  } catch (err) {
-    console.error('[API] Report generation failed:', err.message);
-    return false;
-  }
-}
-
-async function fetchReportHtml(client, week, year) {
-  // Look for the report in local output or Supabase
-  const localPath = path.join(process.cwd(), 'output', `${client}_W${week}_${year}.html`);
-  if (fs.existsSync(localPath)) {
-    return fs.readFileSync(localPath, 'utf8');
-  }
-
-  // Fallback: fetch from Supabase reports table
-  const { data, error } = await supabase
-    .from('reports')
-    .select('html_content')
-    .eq('client_slug', client)
-    .eq('week', week)
-    .eq('year', year)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
-
-  if (error || !data) {
-    console.error('[API] Could not fetch report HTML from Supabase:', error?.message);
-    return null;
-  }
-
-  return data.html_content;
-}
-
-async function sendReportEmail({ name, email, competitor, html, week, year }) {
-  const { data, error } = await resend.emails.send({
-    from: 'Marktel Intelligence <reports@marktel.io>',
-    to: [email],
-    subject: `Your ${competitor} Intelligence Report — W${week} ${year}`,
-    html: `
-      <p>Hi ${name},</p>
-      <p>Your on-demand intelligence report for <strong>${competitor}</strong> is ready.</p>
-      <p>Report covers Week ${week}, ${year}.</p>
-      <hr/>
-      ${html}
-      <hr/>
-      <p style="font-size:12px;color:#999;">
-        Marktel Intelligence &middot; Made in Switzerland<br/>
-        <a href="https://marktel.io/privacy">Privacy</a> &middot;
-        <a href="https://marktel.io/terms">Terms</a> &middot;
-        <a href="https://marktel.io/contact">Contact</a>
-      </p>
-    `,
-  });
-
-  if (error) {
-    console.error('[API] Resend error:', error);
-    return false;
-  }
-
-  console.log('[API] Email sent:', data?.id);
-  return true;
-}
-
-async function logRequest({ name, email, competitor, week, year, status }) {
-  await supabase.from('report_requests').insert({
-    name,
-    email,
-    competitor,
-    week,
-    year,
-    status,
-    requested_at: new Date().toISOString(),
-  });
-}
-
-export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// ─── Main handler ─────────────────────────────────────────────────────────
+export default async function handler(req) {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  };
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return new Response(null, { status: 200, headers });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
   }
 
-  const { name, email, competitor: competitorKey } = req.body;
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers });
+  }
 
-  // Validate inputs
-  if (!name || !email || !competitorKey) {
-    return res.status(400).json({ error: 'Missing required fields: name, email, competitor' });
+  const { name, email } = body;
+
+  if (!name || !email) {
+    return new Response(JSON.stringify({ error: 'Missing name or email' }), { status: 400, headers });
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address' });
+    return new Response(JSON.stringify({ error: 'Invalid email address' }), { status: 400, headers });
   }
 
-  const competitor = COMPETITORS[competitorKey];
-  if (!competitor) {
-    return res.status(400).json({
-      error: `Unknown competitor. Valid options: ${Object.keys(COMPETITORS).join(', ')}`,
+  const signals = AXA_SIGNALS;
+  const { week, year, company } = signals;
+
+  // Step 1: Call Claude Haiku
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  const prompt = `You are Marktel, a Swiss B2B competitive intelligence platform.
+
+Generate a professional weekly intelligence report for the competitor: ${company}.
+Week: ${week}, Year: ${year}.
+
+Use the following raw signals:
+
+LINKEDIN (${signals.linkedin.totalFollowers.toLocaleString()} followers, ${signals.linkedin.followerGrowth} growth):
+${signals.linkedin.posts.map(p => `- [${p.date}] ${p.content} (👍${p.engagement.likes} 💬${p.engagement.comments} 🔁${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
+
+FACEBOOK (${signals.facebook.pageFollowers.toLocaleString()} followers, avg engagement ${signals.facebook.avgEngagementRate}):
+${signals.facebook.posts.map(p => `- [${p.date}] ${p.content} (👍${p.engagement.likes} 💬${p.engagement.comments} 🔁${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
+
+WEB & CAMPAIGNS:
+${signals.web.recentCampaigns.map(c => `- ${c}`).join('\n')}
+Pricing signals: ${signals.web.pricingSignals}
+
+Overall sentiment: ${signals.sentiment}
+
+Write a sharp, editorial intelligence briefing in HTML (no <html>/<body> tags — just content divs). Structure:
+1. Executive Summary (3 bullet points)
+2. Channel Activity Breakdown (LinkedIn + Facebook)
+3. Key Themes This Week
+4. Strategic Implications (what this means for competitors)
+5. Recommended Actions (3 actionable bullets)
+
+Use <h2> for sections, <h3> for sub-sections, <p> and <ul>/<li> for content. Be specific, sharp, and actionable. No fluff.`;
+
+  let reportBody;
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }],
     });
+    reportBody = message.content[0].text;
+  } catch (err) {
+    console.error('[Marktel] Claude error:', err);
+    return new Response(JSON.stringify({ error: 'Report generation failed' }), { status: 500, headers });
   }
 
-  const week = getCurrentWeek();
-  const year = new Date().getFullYear();
-  const clientSlug = competitorKey;
-
-  console.log(`[API] Request from ${name} <${email}> — competitor: ${competitor.label} — W${week}/${year}`);
-
-  // Log request immediately
-  await logRequest({ name, email, competitor: competitor.label, week, year, status: 'processing' });
-
-  // Acknowledge immediately — Vercel functions have a 10s limit on hobby plan
-  // For now we run synchronously (works on Pro plan with 60s limit)
-  // TODO: replace with background queue (Inngest) for production
+  // Step 2: Send email via Resend
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const html = buildEmailHtml(name, reportBody, week, year);
 
   try {
-    // Step 1: Collect LinkedIn data
-    const linkedinOk = runCollector(
-      'linkedin.js',
-      `--client ${clientSlug} --handle ${competitor.linkedinHandle} --week ${week}`
-    );
-
-    // Step 2: Collect Facebook data
-    const facebookOk = runCollector(
-      'facebook.js',
-      `--client ${clientSlug} --pageId ${competitor.facebookPageId} --week ${week}`
-    );
-
-    if (!linkedinOk && !facebookOk) {
-      await logRequest({ name, email, competitor: competitor.label, week, year, status: 'collection_failed' });
-      return res.status(500).json({ error: 'Data collection failed for both sources.' });
-    }
-
-    // Step 3: Generate report
-    const reportOk = runReportGenerator(clientSlug, week, year);
-
-    if (!reportOk) {
-      await logRequest({ name, email, competitor: competitor.label, week, year, status: 'report_failed' });
-      return res.status(500).json({ error: 'Report generation failed.' });
-    }
-
-    // Step 4: Fetch the HTML
-    const html = await fetchReportHtml(clientSlug, week, year);
-
-    if (!html) {
-      return res.status(500).json({ error: 'Could not retrieve generated report.' });
-    }
-
-    // Step 5: Email it
-    const emailOk = await sendReportEmail({
-      name,
-      email,
-      competitor: competitor.label,
+    await resend.emails.send({
+      from: 'Marktel Intelligence <reports@marktel.io>',
+      to: [email],
+      subject: `AXA Switzerland Intelligence Report — W${week} ${year}`,
       html,
-      week,
-      year,
     });
-
-    await logRequest({
-      name,
-      email,
-      competitor: competitor.label,
-      week,
-      year,
-      status: emailOk ? 'delivered' : 'email_failed',
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: `Report for ${competitor.label} sent to ${email}`,
-      week,
-      year,
-    });
-
   } catch (err) {
-    console.error('[API] Unhandled error:', err);
-    await logRequest({ name, email, competitor: competitor.label, week, year, status: 'error' });
-    return res.status(500).json({ error: 'Unexpected server error. Please try again.' });
+    console.error('[Marktel] Resend error:', err);
+    return new Response(JSON.stringify({ error: 'Email delivery failed' }), { status: 500, headers });
   }
+
+  return new Response(
+    JSON.stringify({ success: true, message: `Report sent to ${email}` }),
+    { status: 200, headers }
+  );
 }
