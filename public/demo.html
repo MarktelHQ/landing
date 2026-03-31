@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<title>Marktelio — Generate Your Intelligence Briefing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F0F1F5; color: #0D0D1A; }
+
+  /* NAV */
+  nav { background: rgba(13,13,26,0.97); backdrop-filter: blur(12px); position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: 1px solid #1A2A3A; }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { color: #8888AA; font-size: 13px; font-weight: 600; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: #00E5C8; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-mark { width: 32px; height: 32px; background: linear-gradient(135deg, #00A896, #00E5C8); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #0D0D1A; }
+  .logo-name { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+
+  /* HERO */
+  .hero { background: #0D0D1A; padding: 140px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,200,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,200,0.04) 1px, transparent 1px); background-size: 48px 48px; }
+  .hero-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(0,168,150,0.15) 0%, transparent 70%); pointer-events: none; }
+  .hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: #1A2A3A; border: 1px solid #2A3A4A; border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 700; color: #00E5C8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
+  .hero-badge span { width: 7px; height: 7px; background: #00E5C8; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 { font-size: 48px; font-weight: 800; color: #fff; line-height: 1.05; letter-spacing: -2px; margin-bottom: 16px; }
+  .hero h1 em { font-style: normal; color: #00E5C8; }
+  .hero-sub { font-size: 17px; color: #8888AA; line-height: 1.6; max-width: 500px; margin: 0 auto; }
+
+  /* FORM SECTION */
+  .form-section { background: #F0F1F5; padding: 64px 24px 80px; }
+  .form-wrap { max-width: 540px; margin: 0 auto; }
+
+  .form-card { background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); border: 1px solid #E8E9F0; }
+
+  .form-group { margin-bottom: 20px; }
+  label { display: block; font-size: 13px; font-weight: 700; color: #0D0D1A; margin-bottom: 8px; }
+  input, select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #E0E1E8;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #0D0D1A;
+    font-family: inherit;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  input:focus, select:focus { outline: none; border-color: #00A896; box-shadow: 0 0 0 3px rgba(0,168,150,0.12); }
+  input::placeholder { color: #AAAACC; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after { content: '▾'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #8888AA; pointer-events: none; font-size: 13px; }
+
+  .btn-submit {
+    width: 100%;
+    background: #00A896;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .btn-submit:hover { background: #00C9B0; transform: translateY(-1px); }
+  .btn-submit:disabled { background: #AAAACC; cursor: not-allowed; transform: none; }
+
+  .form-note { font-size: 12px; color: #8888AA; text-align: center; margin-top: 14px; }
+
+  /* STATUS MESSAGES */
+  .status { display: none; margin-top: 20px; padding: 16px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+  .status.loading { display: flex; align-items: center; gap: 10px; background: #1A2A3A; color: #00E5C8; }
+  .status.success { display: block; background: #E6FDF9; color: #00A896; border: 1px solid #00E5C8; }
+  .status.error { display: block; background: #FFF0F0; color: #CC2200; border: 1px solid #FFBBBB; }
+
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(0,229,200,0.3); border-top-color: #00E5C8; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TRUST BAR */
+  .trust-bar { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 32px; }
+  .trust-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8888AA; font-weight: 600; }
+  .trust-icon { font-size: 14px; }
+
+  /* FOOTER */
+  footer { background: #0D0D1A; border-top: 1px solid #1A2A3A; padding: 40px 24px; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .footer-copy { font-size: 13px; color: #556688; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: #556688; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: #00E5C8; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-mark">M</div>
+      <span class="logo-name">Marktelio</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span></span> Private Beta</div>
+    <h1>Your <em>intelligence</em><br>briefing awaits</h1>
+    <p class="hero-sub">Enter your details, select a competitor, and we'll generate your bespoke report in minutes.</p>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section">
+  <div class="form-wrap">
+    <div class="form-card">
+      <form id="briefingForm">
+
+        <div class="form-group">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" placeholder="Jane Smith" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" placeholder="jane@company.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="competitor">Competitor to analyse</label>
+          <div class="select-wrap">
+            <select id="competitor" name="competitor" required>
+              <option value="" disabled selected>Select a competitor&hellip;</option>
+              <option value="axa">AXA Switzerland</option>
+              <option value="zurich">Zurich Insurance</option>
+              <option value="helvetia">Helvetia</option>
+              <option value="allianz">Allianz Schweiz</option>
+              <option value="mobiliar">Die Mobiliar</option>
+              <option value="css">CSS Versicherung</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Generate briefing
+        </button>
+
+        <p class="form-note">Report delivered to your inbox within 5 minutes.</p>
+      </form>
+
+      <div class="status loading" id="statusLoading">
+        <div class="spinner"></div>
+        Collecting data &amp; generating your briefing&hellip;
+      </div>
+      <div class="status success" id="statusSuccess">
+        ✅ Report on its way! Check your inbox in the next few minutes.
+      </div>
+      <div class="status error" id="statusError">
+        ⚠️ Something went wrong. Please try again or contact us.
+      </div>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-item"><span class="trust-icon">🔒</span> Data never stored</div>
+      <div class="trust-item"><span class="trust-icon">⚡</span> AI-powered analysis</div>
+      <div class="trust-item"><span class="trust-icon">🇨🇭</span> Made in Switzerland</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">&copy; 2026 Marktelio. Made in Switzerland.</div>
+    <div class="footer-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const form = document.getElementById('briefingForm');
+const btn  = document.getElementById('submitBtn');
+const statusLoading = document.getElementById('statusLoading');
+const statusSuccess = document.getElementById('statusSuccess');
+const statusError   = document.getElementById('statusError');
+
+function resetStatus() {
+  statusLoading.style.display = 'none';
+  statusSuccess.style.display = 'none';
+  statusError.style.display   = 'none';
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  resetStatus();
+
+  const name       = document.getElementById('name').value.trim();
+  const email      = document.getElementById('email').value.trim();
+  const competitor = document.getElementById('competitor').value;
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff"></div> Generating&hellip;';
+  statusLoading.style.display = 'flex';
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, competitor }),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    statusLoading.style.display = 'none';
+    statusSuccess.style.display = 'block';
+    form.reset();
+  } catch (err) {
+    console.error(err);
+    statusLoading.style.display = 'none';
+    statusError.style.display   = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Generate briefing';
+  }
+});
+</script>
+</body>
+</html>
