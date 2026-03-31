@@ -1,6 +1,6 @@
 // api/generate.js - Marktel demo endpoint
-// Edge Runtime - native fetch only
-// Claude outputs JSON -> JS builds full branded HTML template
+// Edge Runtime + TransformStream heartbeat — keeps connection alive past 25s wall
+// Claude outputs JSON -> JS builds full branded HTML -> Resend delivers
 
 export const config = { runtime: 'edge' };
 
@@ -421,10 +421,10 @@ function buildEmail(name, d, week, year) {
     <div class="footer-logo">markte<span class="tel">lio</span></div>
     <div class="footer-tagline">We do the research. You stay ahead.</div>
     <div class="footer-links">
-      <a href="https://marktel.io">marktel.io</a>
-      <a href="https://marktel.io/legal">Privacy</a>
-    
-     
+      <a href="https://marktelio.io">marktelio.io</a>
+      <a href="https://marktelio.io/privacy">Privacy</a>
+      <a href="https://marktelio.io/terms">Terms</a>
+      <a href="mailto:hello@marktelio.io">hello@marktelio.io</a>
     </div>
     <div class="footer-note">Hi ${name} &mdash; your on-demand report for <strong>AXA Switzerland</strong> is ready.<br>Made in Switzerland &#127464;&#127469;</div>
   </div>
@@ -434,76 +434,91 @@ function buildEmail(name, d, week, year) {
 </html>`;
 }
 
-// ─── MAIN HANDLER ────────────────────────────────────────────────────────────
+// ─── MAIN HANDLER (Edge + TransformStream) ───────────────────────────────────
 export default async function handler(req) {
-  const headers = {
+  const cors = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
   };
 
-  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers });
-  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
+  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: cors });
+  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: { ...cors, 'Content-Type': 'application/json' } });
 
   let body;
-  try { body = await req.json(); } catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers }); }
+  try { body = await req.json(); } catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } }); }
 
   const { name, email } = body;
-  if (!name || !email) return new Response(JSON.stringify({ error: 'Missing name or email' }), { status: 400, headers });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return new Response(JSON.stringify({ error: 'Invalid email' }), { status: 400, headers });
+  if (!name || !email) return new Response(JSON.stringify({ error: 'Missing name or email' }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return new Response(JSON.stringify({ error: 'Invalid email' }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } });
 
   const { week, year } = AXA_SIGNALS;
 
-  // Step 1: Claude returns JSON analysis
-  let reportData;
-  try {
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 2500,
-        messages: [{ role: 'user', content: buildPrompt(AXA_SIGNALS) }],
-      }),
-    });
-    if (!claudeRes.ok) throw new Error(await claudeRes.text());
-    const claudeData = await claudeRes.json();
-    let raw = claudeData.content[0].text.trim();
-    raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-    reportData = JSON.parse(raw);
-  } catch (err) {
-    console.error('[Marktelio] Claude error:', err.message);
-    return new Response(JSON.stringify({ error: 'Report generation failed' }), { status: 500, headers });
-  }
+  // TransformStream keeps the Edge connection alive while Claude processes.
+  // Vercel's 25s wall-clock applies only to time-to-first-byte; an open stream
+  // stays alive indefinitely (up to the function's maxDuration).
+  const { readable, writable } = new TransformStream();
+  const writer = writable.getWriter();
+  const enc = new TextEncoder();
 
-  // Step 2: Build full HTML
-  const html = buildEmail(name, reportData, week, year);
+  (async () => {
+    let heartbeat;
+    try {
+      // Write a whitespace heartbeat every 5s — keeps the socket warm
+      heartbeat = setInterval(() => writer.write(enc.encode(' ')), 5000);
 
-  // Step 3: Send via Resend
-  try {
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: 'Marktelio Intelligence <reports@marktelio.io>',
-        to: [email],
-        subject: `AXA Switzerland Intelligence Report \u2014 W${week} ${year}`,
-        html,
-      }),
-    });
-    if (!resendRes.ok) throw new Error(await resendRes.text());
-  } catch (err) {
-    console.error('[Marktelio] Resend error:', err.message);
-    return new Response(JSON.stringify({ error: 'Email delivery failed' }), { status: 500, headers });
-  }
+      // Step 1: Claude — returns structured JSON analysis
+      const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5',
+          max_tokens: 2500,
+          messages: [{ role: 'user', content: buildPrompt(AXA_SIGNALS) }],
+        }),
+      });
+      if (!claudeRes.ok) throw new Error(await claudeRes.text());
+      const claudeData = await claudeRes.json();
+      let raw = claudeData.content[0].text.trim();
+      raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+      const reportData = JSON.parse(raw);
 
-  return new Response(JSON.stringify({ success: true, message: `Report sent to ${email}` }), { status: 200, headers });
+      // Step 2: Build branded HTML email
+      const html = buildEmail(name, reportData, week, year);
+
+      // Step 3: Send via Resend
+      const resendRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: 'Marktelio Intelligence <reports@marktelio.io>',
+          to: [email],
+          subject: `AXA Switzerland Intelligence Report \u2014 W${week} ${year}`,
+          html,
+        }),
+      });
+      if (!resendRes.ok) throw new Error(await resendRes.text());
+
+      clearInterval(heartbeat);
+      await writer.write(enc.encode(JSON.stringify({ success: true, message: `Report sent to ${email}` })));
+    } catch (err) {
+      clearInterval(heartbeat);
+      await writer.write(enc.encode(JSON.stringify({ error: err.message })));
+    } finally {
+      await writer.close();
+    }
+  })();
+
+  // Return immediately — stream stays open while the async block runs above
+  return new Response(readable, {
+    status: 200,
+    headers: { ...cors, 'Content-Type': 'application/json' },
+  });
 }
