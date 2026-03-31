@@ -1,81 +1,44 @@
-// api/generate.js — Marktel demo endpoint (Vercel Edge Runtime)
-// POST /api/generate  —  Body: { name, email }
-// Competitor hardcoded to AXA for demo
-// Edge Runtime: 30s wall time — fits Claude Haiku + Resend comfortably
+// api/generate.js - Marktel demo endpoint
+// Edge Runtime: native fetch only, no npm imports
+// POST /api/generate  Body: { name, email }
 
 export const config = { runtime: 'edge' };
 
-import Anthropic from '@anthropic-ai/sdk';
-import { Resend } from 'resend';
-
-// ─── AXA Switzerland — pre-built signal data ──────────────────────────────
 const AXA_SIGNALS = {
   company: 'AXA Switzerland',
   week: 13,
   year: 2026,
   linkedin: {
     posts: [
-      {
-        date: '2026-03-25',
-        content: 'AXA Switzerland launches new digital health portal for SME clients, integrating telemedicine and claims in one app.',
-        engagement: { likes: 312, comments: 28, shares: 45 },
-        theme: 'Digital Health',
-      },
-      {
-        date: '2026-03-24',
-        content: 'Our 2025 sustainability report is live. Net-zero target brought forward to 2040.',
-        engagement: { likes: 198, comments: 14, shares: 31 },
-        theme: 'ESG / Sustainability',
-      },
-      {
-        date: '2026-03-22',
-        content: 'Proud to announce our partnership with Swiss Startup Association — supporting 50 high-growth ventures in 2026.',
-        engagement: { likes: 421, comments: 52, shares: 67 },
-        theme: 'Partnerships / Ecosystem',
-      },
+      { date: '2026-03-25', content: 'AXA Switzerland launches new digital health portal for SME clients, integrating telemedicine and claims in one app.', engagement: { likes: 312, comments: 28, shares: 45 }, theme: 'Digital Health' },
+      { date: '2026-03-24', content: 'Our 2025 sustainability report is live. Net-zero target brought forward to 2040.', engagement: { likes: 198, comments: 14, shares: 31 }, theme: 'ESG / Sustainability' },
+      { date: '2026-03-22', content: 'Proud to announce our partnership with Swiss Startup Association - supporting 50 high-growth ventures in 2026.', engagement: { likes: 421, comments: 52, shares: 67 }, theme: 'Partnerships / Ecosystem' },
     ],
     followerGrowth: '+1.2% WoW',
     totalFollowers: 89400,
-    topTheme: 'Digital Health',
   },
   facebook: {
     posts: [
-      {
-        date: '2026-03-26',
-        content: 'Spring driving tips — stay safe on wet roads. AXA Motor covers you 24/7.',
-        engagement: { likes: 543, comments: 61, shares: 88 },
-        theme: 'Consumer / Motor',
-      },
-      {
-        date: '2026-03-23',
-        content: 'Win a weekend wellness retreat! Enter our giveaway by sharing your wellness routine.',
-        engagement: { likes: 1204, comments: 237, shares: 312 },
-        theme: 'Activation / Giveaway',
-      },
+      { date: '2026-03-26', content: 'Spring driving tips - stay safe on wet roads. AXA Motor covers you 24/7.', engagement: { likes: 543, comments: 61, shares: 88 }, theme: 'Consumer / Motor' },
+      { date: '2026-03-23', content: 'Win a weekend wellness retreat! Enter our giveaway by sharing your wellness routine.', engagement: { likes: 1204, comments: 237, shares: 312 }, theme: 'Activation / Giveaway' },
     ],
     pageFollowers: 124000,
     avgEngagementRate: '3.8%',
   },
   web: {
-    recentCampaigns: [
-      'Digital Health Hub launch (Mar 2026)',
-      'AXA for Startups programme expansion',
-      'SME bundled insurance refresh',
-    ],
+    recentCampaigns: ['Digital Health Hub launch (Mar 2026)', 'AXA for Startups programme expansion', 'SME bundled insurance refresh'],
     pricingSignals: 'No public price changes detected this week.',
   },
-  sentiment: 'Positive — health innovation and sustainability messaging dominating.',
+  sentiment: 'Positive - health innovation and sustainability messaging dominating.',
 };
 
-// ─── Email HTML template ───────────────────────────────────────────────────
 function buildEmailHtml(name, reportBody, week, year) {
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXA Switzerland Intelligence Report — W${week} ${year}</title>
+<title>AXA Switzerland Intelligence Report - W${week} ${year}</title>
 <style>
   body { margin:0; padding:0; background:#F0F1F5; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; }
   .wrapper { max-width:640px; margin:0 auto; padding:32px 16px; }
@@ -84,14 +47,12 @@ function buildEmailHtml(name, reportBody, week, year) {
   .header h1 { margin:0; font-size:22px; font-weight:800; color:#fff; letter-spacing:-0.5px; }
   .header p { margin:6px 0 0; font-size:13px; color:#8888AA; }
   .body { background:#fff; padding:36px; border-left:1px solid #E8E9F0; border-right:1px solid #E8E9F0; }
-  .greeting { font-size:15px; color:#0D0D1A; margin-bottom:24px; }
   .report-content { font-size:14px; color:#333; line-height:1.7; }
   .report-content h2 { font-size:16px; font-weight:800; color:#0D0D1A; border-left:3px solid #00E5C8; padding-left:12px; margin:28px 0 12px; }
   .report-content h3 { font-size:13px; font-weight:700; color:#00A896; margin:16px 0 6px; text-transform:uppercase; letter-spacing:0.5px; }
   .report-content p { margin:0 0 14px; }
   .report-content ul { padding-left:20px; margin:0 0 14px; }
   .report-content li { margin-bottom:6px; }
-  .badge { display:inline-block; background:#E6FDF9; color:#00A896; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-right:6px; }
   .footer-bar { background:#0D0D1A; border-radius:0 0 16px 16px; padding:24px 36px; }
   .footer-bar p { margin:0; font-size:12px; color:#556688; }
   .footer-bar a { color:#8888AA; text-decoration:none; }
@@ -101,15 +62,13 @@ function buildEmailHtml(name, reportBody, week, year) {
 <div class="wrapper">
   <div class="header">
     <div class="logo-mark">M</div>
-    <h1>AXA Switzerland — Intelligence Report</h1>
-    <p>Week ${week}, ${year} &nbsp;·&nbsp; Generated by Marktel AI</p>
+    <h1>AXA Switzerland - Intelligence Report</h1>
+    <p>Week ${week}, ${year} &nbsp;Generated by Marktel AI</p>
   </div>
   <div class="body">
-    <p class="greeting">Hi ${name},</p>
-    <p class="greeting" style="color:#556688;">Here is your on-demand competitor intelligence briefing for <strong>AXA Switzerland</strong>.</p>
-    <div class="report-content">
-      ${reportBody}
-    </div>
+    <p style="font-size:15px;color:#0D0D1A;margin-bottom:16px;">Hi ${name},</p>
+    <p style="font-size:14px;color:#556688;margin-bottom:24px;">Here is your on-demand competitor intelligence briefing for <strong>AXA Switzerland</strong>.</p>
+    <div class="report-content">${reportBody}</div>
   </div>
   <div class="footer-bar">
     <p>Marktel Intelligence &middot; Made in Switzerland<br/>
@@ -122,7 +81,6 @@ function buildEmailHtml(name, reportBody, week, year) {
 </html>`;
 }
 
-// ─── Main handler ─────────────────────────────────────────────────────────
 export default async function handler(req) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -131,96 +89,78 @@ export default async function handler(req) {
     'Content-Type': 'application/json',
   };
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers });
-  }
-
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers });
+  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
 
   let body;
-  try {
-    body = await req.json();
-  } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers });
-  }
+  try { body = await req.json(); } catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers }); }
 
   const { name, email } = body;
+  if (!name || !email) return new Response(JSON.stringify({ error: 'Missing name or email' }), { status: 400, headers });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return new Response(JSON.stringify({ error: 'Invalid email' }), { status: 400, headers });
 
-  if (!name || !email) {
-    return new Response(JSON.stringify({ error: 'Missing name or email' }), { status: 400, headers });
-  }
+  const { company, week, year } = AXA_SIGNALS;
+  const s = AXA_SIGNALS;
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return new Response(JSON.stringify({ error: 'Invalid email address' }), { status: 400, headers });
-  }
+  const prompt = `You are Marktel, a Swiss B2B competitive intelligence platform. Generate a professional weekly intelligence report for: ${company}. Week: ${week}, Year: ${year}.
 
-  const signals = AXA_SIGNALS;
-  const { week, year, company } = signals;
+LINKEDIN (${s.linkedin.totalFollowers} followers, ${s.linkedin.followerGrowth} growth):
+${s.linkedin.posts.map(p => `- [${p.date}] ${p.content} (Likes:${p.engagement.likes} Comments:${p.engagement.comments} Shares:${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
 
-  // Step 1: Call Claude Haiku
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+FACEBOOK (${s.facebook.pageFollowers} followers, avg engagement ${s.facebook.avgEngagementRate}):
+${s.facebook.posts.map(p => `- [${p.date}] ${p.content} (Likes:${p.engagement.likes} Comments:${p.engagement.comments} Shares:${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
 
-  const prompt = `You are Marktel, a Swiss B2B competitive intelligence platform.
+CAMPAIGNS: ${s.web.recentCampaigns.join(', ')}
+Pricing: ${s.web.pricingSignals}
+Sentiment: ${s.sentiment}
 
-Generate a professional weekly intelligence report for the competitor: ${company}.
-Week: ${week}, Year: ${year}.
+Write a sharp HTML intelligence briefing (no html/body tags, just content). Sections: 1) Executive Summary (3 bullets) 2) Channel Activity (LinkedIn + Facebook) 3) Key Themes 4) Strategic Implications 5) Recommended Actions (3 bullets). Use h2, h3, p, ul/li. Be specific and actionable.`;
 
-Use the following raw signals:
-
-LINKEDIN (${signals.linkedin.totalFollowers.toLocaleString()} followers, ${signals.linkedin.followerGrowth} growth):
-${signals.linkedin.posts.map(p => `- [${p.date}] ${p.content} (👍${p.engagement.likes} 💬${p.engagement.comments} 🔁${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
-
-FACEBOOK (${signals.facebook.pageFollowers.toLocaleString()} followers, avg engagement ${signals.facebook.avgEngagementRate}):
-${signals.facebook.posts.map(p => `- [${p.date}] ${p.content} (👍${p.engagement.likes} 💬${p.engagement.comments} 🔁${p.engagement.shares}) Theme: ${p.theme}`).join('\n')}
-
-WEB & CAMPAIGNS:
-${signals.web.recentCampaigns.map(c => `- ${c}`).join('\n')}
-Pricing signals: ${signals.web.pricingSignals}
-
-Overall sentiment: ${signals.sentiment}
-
-Write a sharp, editorial intelligence briefing in HTML (no <html>/<body> tags — just content divs). Structure:
-1. Executive Summary (3 bullet points)
-2. Channel Activity Breakdown (LinkedIn + Facebook)
-3. Key Themes This Week
-4. Strategic Implications (what this means for competitors)
-5. Recommended Actions (3 actionable bullets)
-
-Use <h2> for sections, <h3> for sub-sections, <p> and <ul>/<li> for content. Be specific, sharp, and actionable. No fluff.`;
-
+  // Call Claude via native fetch
   let reportBody;
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 1200,
-      messages: [{ role: 'user', content: prompt }],
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }],
+      }),
     });
-    reportBody = message.content[0].text;
+    if (!claudeRes.ok) throw new Error(await claudeRes.text());
+    const claudeData = await claudeRes.json();
+    reportBody = claudeData.content[0].text;
   } catch (err) {
-    console.error('[Marktel] Claude error:', err);
+    console.error('[Marktel] Claude error:', err.message);
     return new Response(JSON.stringify({ error: 'Report generation failed' }), { status: 500, headers });
   }
 
-  // Step 2: Send email via Resend
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  // Send email via Resend native fetch
   const html = buildEmailHtml(name, reportBody, week, year);
-
   try {
-    await resend.emails.send({
-      from: 'Marktel Intelligence <reports@marktel.io>',
-      to: [email],
-      subject: `AXA Switzerland Intelligence Report — W${week} ${year}`,
-      html,
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'Marktel Intelligence <reports@marktel.io>',
+        to: [email],
+        subject: `AXA Switzerland Intelligence Report - W${week} ${year}`,
+        html,
+      }),
     });
+    if (!resendRes.ok) throw new Error(await resendRes.text());
   } catch (err) {
-    console.error('[Marktel] Resend error:', err);
+    console.error('[Marktel] Resend error:', err.message);
     return new Response(JSON.stringify({ error: 'Email delivery failed' }), { status: 500, headers });
   }
 
-  return new Response(
-    JSON.stringify({ success: true, message: `Report sent to ${email}` }),
-    { status: 200, headers }
-  );
+  return new Response(JSON.stringify({ success: true, message: `Report sent to ${email}` }), { status: 200, headers });
 }
