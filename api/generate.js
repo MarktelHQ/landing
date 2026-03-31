@@ -429,8 +429,23 @@ export default async function handler(req, res) {
     if (!claudeRes.ok) throw new Error('[Claude] ' + await claudeRes.text());
     const claudeData = await claudeRes.json();
     let raw = claudeData.content[0].text.trim();
+    // Strip markdown code fences if present
     raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-    const reportData = JSON.parse(raw);
+    // Extract only the JSON object — everything between first { and last }
+    const jsonStart = raw.indexOf('{');
+    const jsonEnd = raw.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('[Claude] No JSON object found in response');
+    raw = raw.slice(jsonStart, jsonEnd + 1);
+    // Sanitise control characters that break JSON.parse
+    raw = raw.replace(/[\u0000-\u001F\u007F]/g, ' ');
+    let reportData;
+    try {
+      reportData = JSON.parse(raw);
+    } catch (parseErr) {
+      console.error('[Claude] JSON parse failed:', parseErr.message);
+      console.error('[Claude] Raw snippet around error:', raw.slice(Math.max(0, parseInt(parseErr.message.match(/\d+/)?.[0] || 0) - 80), parseInt(parseErr.message.match(/\d+/)?.[0] || 0) + 80));
+      throw new Error('[Claude] Malformed JSON: ' + parseErr.message);
+    }
     console.log('[Claude] OK');
 
     // Step 2: Build branded HTML email
