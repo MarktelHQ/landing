@@ -114,7 +114,7 @@ CAMPAIGNS: ${s.web.recentCampaigns.join(', ')}
 Pricing: ${s.web.pricingSignals}
 Sentiment: ${s.sentiment}
 
-Write a sharp HTML intelligence briefing (no html/body tags, just content). Sections: 1) Executive Summary (3 bullets) 2) Channel Activity (LinkedIn + Facebook) 3) Key Themes 4) Strategic Implications 5) Recommended Actions (3 bullets). Use h2, h3, p, ul/li. Be specific and actionable.`;
+Output ONLY raw HTML with no markdown, no code fences, no backticks, no explanation. Start directly with a <div> tag. Sections: 1) Executive Summary (3 bullets) 2) Channel Activity (LinkedIn + Facebook) 3) Key Themes 4) Strategic Implications 5) Recommended Actions (3 bullets). Use h2, h3, p, ul/li tags only. Be specific and actionable.`;
 
   // Call Claude via native fetch
   let reportBody;
