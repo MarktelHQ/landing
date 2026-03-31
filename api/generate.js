@@ -355,7 +355,7 @@ export default async function handler(req) {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Marktelio Intelligence <reports@marktelio.io>',
+        from: 'Marktelio Intelligence <reports@send.marktelio.io>',
         to: [email],
         subject: `AXA Switzerland Intelligence Report \u2014 W${week} ${year}`,
         html,
